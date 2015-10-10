@@ -137,7 +137,7 @@ function initialize()
 {
     if(typeof Memory.creepCount === 'undefined')
     {
-        
+        Memory.creepCount = {};
     }
     var init = true;
     return;
