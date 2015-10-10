@@ -37,7 +37,7 @@ var clientSide = function() {
 				setTimeout(update.bind(this, false), req.status === 200 ? 0 : 1000);
 			}
 		};
-		req.open('GET', 'https://localhost:9090/'+ (now ? 'get' : 'wait'), true);
+		req.open('GET', 'http://localhost:9090/'+ (now ? 'get' : 'wait'), true);
 		req.send();
 	};
 	update(true);
@@ -72,7 +72,7 @@ var clientSide = function() {
 		}
 		if (messages.length) {
 			var req = new XMLHttpRequest;
-			req.open('GET', 'https://localhost:9090/log?log='+ encodeURIComponent(JSON.stringify(messages.reverse())), true);
+			req.open('GET', 'http://localhost:9090/log?log='+ encodeURIComponent(JSON.stringify(messages.reverse())), true);
 			req.send();
 			lastMessage = messages[messages.length - 1];
 		}
@@ -152,5 +152,5 @@ server.timeout = 0;
 server.listen(9090);
 console.log(
 	"Paste this into JS debug console in Screeps (*not* the Screeps console):\n"+
-	"var s = document.createElement('script');s.src='https://localhost:9090/inject';document.body.appendChild(s);"
+	"var s = document.createElement('script');s.src='http://localhost:9090/inject';document.body.appendChild(s);"
 );
