@@ -48,7 +48,7 @@
 	        switch(creep.memory.action)
 	        {
 	            case 'move':
-	                if(creep.pos.getRangeTo(Game.getObjectById(creep.memory.target) === 1)
+	                if(creep.pos.getRangeTo(Game.getObjectById(creep.memory.target) === 1))
 	                {
 	                    if(creep.carry.energy < creep.carryCapacity)
 	                    {
