@@ -48,7 +48,7 @@
 	        switch(creep.memory.action)
 	        {
 	            case 'move':
-	                if(creep.pos.getRangeTo(Game.getObjectById(creep.memory.target) === 1))
+	                if(creep.pos.getRangeTo(Game.getObjectById(creep.memory.target)) === 1)
 	                {
 	                    if(creep.carry.energy < creep.carryCapacity)
 	                    {
@@ -65,7 +65,7 @@
 	                {
 	                    //console.log("harvesting from "+creep.memory.target.id);
 	                    //console.log("harvest result: "+
-	                    creep.harvest(Game.getObjectById(creep.memory.target.id));
+	                    creep.harvest(Game.getObjectById(creep.memory.target));
 	                    //);
 	                }
 	                else
@@ -77,9 +77,10 @@
 	            case 'unload':
 	                if(creep.carry.energy > 0)
 	                {
-	                    var deficit = Game.getObjectById(creep.memory.target).energyCapacity - Game.getObjectById(creep.memory.target).energy;
+						var target = Game.getObjectById(creep.memory.target);
+	                    var deficit = target.energyCapacity - target.energy;
 	                    //console.log(
-	                    creep.transferEnergy(Game.getObjectById(creep.memory.target.id), (deficit > creep.carry.energy) ? creep.carry.energy: deficit);
+	                    creep.transferEnergy(target, (deficit > creep.carry.energy) ? creep.carry.energy: deficit);
 	                    //);
 	                }
 	                else

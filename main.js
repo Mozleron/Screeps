@@ -4,7 +4,7 @@ var assault = require('assault');
 /* Game.spawns.Spawn1.createCreep([ATTACK, ATTACK, MOVE, MOVE, TOUGH, TOUGH, TOUGH, TOUGH], null, {role: 'assault'}); */
 module.exports.loop = function () 
 {
-    if(!init)
+    if(!Memory.init)
     {
         initialize();
     }
@@ -42,15 +42,14 @@ module.exports.loop = function ()
 	}
 }
 
-function routeCreep(creep,dest) 
+function routeCreep(creep,destId) 
 {
     if(creep.fatigue>0)
     {return -1;}
-    if(typeof dest === "undefined")
+    if(typeof destId === "undefined")
     {return -1;}
-    //else
-    //{dest = Game.getObjectById(dest);}
-
+    else
+    {var dest = Game.getObjectById(destId);}
     var locStr = creep.room.name+"."+creep.pos.x+"."+creep.pos.y
 
     var path = false;
@@ -135,10 +134,15 @@ function routeCreep(creep,dest)
 
 function initialize()
 {
+    //check for creepCount
     if(typeof Memory.creepCount === 'undefined')
     {
-        
+        Memory.creepCount = {};
     }
-    var init = true;
+    //create a harvester
+    //59 Game.spawns.Spawn1.createCreep([WORK, CARRY, CARRY, MOVE], null, {role: 'harvester',task: 'harvest'});
+    //74 Game.spawns.Spawn1.createCreep([WORK, WORK, CARRY, MOVE], null, {role: 'harvester',task: 'harvest'});
+    Game.spawns.Spawn1.createCreep([WORK, CARRY, MOVE, MOVE], null, {role: 'harvester',task: 'harvest'});
+    Memory.init = true;
     return;
 }
