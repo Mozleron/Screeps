@@ -50,7 +50,7 @@ function routeCreep(creep,destId)
     {return -1;}
     else
     {var dest = Game.getObjectById(destId);}
-
+    console.log("dest.id: "+dest.id);
     var locStr = creep.room.name+"."+creep.pos.x+"."+creep.pos.y
 
     var path = false;
