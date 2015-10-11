@@ -140,7 +140,8 @@ function initialize()
         Memory.creepCount = {};
     }
     //create a harvester
-    Game.spawns.Spawn1.createCreep([WORK, WORK, CARRY, MOVE], null, {role: 'harvester',task: 'harvest'});
+    Game.spawns.Spawn1.createCreep([WORK, CARRY, CARRY, MOVE], null, {role: 'harvester',task: 'harvest'});
+    //74 Game.spawns.Spawn1.createCreep([WORK, WORK, CARRY, MOVE], null, {role: 'harvester',task: 'harvest'});
     Memory.init = true;
     return;
 }
