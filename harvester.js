@@ -65,7 +65,11 @@
 	                {
 	                    //console.log("harvesting from "+creep.memory.target.id);
 	                    //console.log("harvest result: "+
-	                    creep.harvest(Game.getObjectById(creep.memory.target.id));
+						var error = 0;
+	                    if((error = creep.harvest(Game.getObjectById(creep.memory.target.id))) !== 0)
+						{
+							console.log(error);
+						}
 	                    //);
 	                }
 	                else
