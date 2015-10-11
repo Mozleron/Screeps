@@ -4,7 +4,7 @@ var assault = require('assault');
 /* Game.spawns.Spawn1.createCreep([ATTACK, ATTACK, MOVE, MOVE, TOUGH, TOUGH, TOUGH, TOUGH], null, {role: 'assault'}); */
 module.exports.loop = function () 
 {
-    if(!init)
+    if(!Memory.init)
     {
         initialize();
     }
@@ -135,10 +135,13 @@ function routeCreep(creep,dest)
 
 function initialize()
 {
+    //check for creepCount
     if(typeof Memory.creepCount === 'undefined')
     {
         Memory.creepCount = {};
     }
-    var init = true;
+    //create a harvester
+    Game.spawns.Spawn1.createCreep([WORK, WORK, CARRY, MOVE], null, {role: 'harvester',task: 'harvest'});
+    Memory.init = true;
     return;
 }
