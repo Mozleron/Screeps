@@ -42,14 +42,14 @@ module.exports.loop = function ()
 	}
 }
 
-function routeCreep(creep,dest) 
+function routeCreep(creep,destId) 
 {
     if(creep.fatigue>0)
     {return -1;}
-    if(typeof dest === "undefined")
+    if(typeof destId === "undefined")
     {return -1;}
     else
-    {dest = Game.getObjectById(dest);}
+    {var dest = Game.getObjectById(destId);}
 
     var locStr = creep.room.name+"."+creep.pos.x+"."+creep.pos.y
 
