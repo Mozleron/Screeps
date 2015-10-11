@@ -48,8 +48,8 @@ function routeCreep(creep,dest)
     {return -1;}
     if(typeof dest === "undefined")
     {return -1;}
-    //else
-    //{dest = Game.getObjectById(dest);}
+    else
+    {dest = Game.getObjectById(dest);}
 
     var locStr = creep.room.name+"."+creep.pos.x+"."+creep.pos.y
 
