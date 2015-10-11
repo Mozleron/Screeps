@@ -1,5 +1,5 @@
 "use strict";
-var http = require('http');
+var https = require('https');
 var path = require('path');
 var fs = require('fs');
 var URL = require('url');
@@ -37,7 +37,7 @@ var clientSide = function() {
 				setTimeout(update.bind(this, false), req.status === 200 ? 0 : 1000);
 			}
 		};
-		req.open('GET', 'http://localhost:9090/'+ (now ? 'get' : 'wait'), true);
+		req.open('GET', 'https://localhost:9090/'+ (now ? 'get' : 'wait'), true);
 		req.send();
 	};
 	update(true);
@@ -72,7 +72,7 @@ var clientSide = function() {
 		}
 		if (messages.length) {
 			var req = new XMLHttpRequest;
-			req.open('GET', 'http://localhost:9090/log?log='+ encodeURIComponent(JSON.stringify(messages.reverse())), true);
+			req.open('GET', 'https://localhost:9090/log?log='+ encodeURIComponent(JSON.stringify(messages.reverse())), true);
 			req.send();
 			lastMessage = messages[messages.length - 1];
 		}
@@ -98,7 +98,11 @@ fs.watch(__dirname, function(ev, file) {
 });
 
 // Localhost HTTP server
-var server = http.createServer(function(req, res) {
+var options = {
+	pfx: fs.readFileSync('ScreepsCert.pfx'),
+	passphrase: 'Ratboy96'
+};
+var server = https.createServer(options, function(req, res) {
 	var path = URL.parse(req.url, true);
 	switch (path.pathname) {
 		case '/inject':
@@ -152,5 +156,5 @@ server.timeout = 0;
 server.listen(9090);
 console.log(
 	"Paste this into JS debug console in Screeps (*not* the Screeps console):\n"+
-	"var s = document.createElement('script');s.src='http://localhost:9090/inject';document.body.appendChild(s);"
+	"var s = document.createElement('script');s.src='https://localhost:9090/inject';document.body.appendChild(s);"
 );
