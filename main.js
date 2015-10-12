@@ -9,7 +9,8 @@ module.exports.loop = function ()
     {
         initialize();
     }
-	for(var name in Game.creeps) {
+	for(var name in Game.creeps) 
+    {
 		var creep = Game.creeps[name];
 
 		/*if(creep.memory.role === 'harvester') 
@@ -56,6 +57,24 @@ module.exports.loop = function ()
 		    routeCreep(creep,creep.memory.target);
 		}
 	}
+}
+
+function initialize()
+{
+    //check for creepCount
+    if(typeof Memory.creepCount === 'undefined')
+    {
+        Memory.creepCount[Room.name] = {};
+    }
+    //create a harvester
+    //59 Game.spawns.Spawn1.createCreep([WORK, CARRY, CARRY, MOVE], null, {role: 'harvester',task: 'harvest'});
+    //74 Game.spawns.Spawn1.createCreep([WORK, WORK, CARRY, MOVE], null, {role: 'harvester',task: 'harvest'});
+    //Game.spawns.Spawn1.createCreep([WORK, CARRY, MOVE, MOVE], null, {role: 'harvester',task: 'harvest'});
+    Game.spawns.Spawn1.createCreep([WORK, WORK, CARRY, MOVE], null, {role: 'tractor',task: 'harvest'});
+    Memory.creepCount[Room.name]['tractor'] = 1;
+    Memory.creepCount[Room.name]['truck'] = 0;
+    Memory.init = true;
+    return;
 }
 
 function routeCreep(creep,destId) 
@@ -146,22 +165,4 @@ function routeCreep(creep,destId)
 
     var error = creep.move(dir);
     return error;
-}
-
-function initialize()
-{
-    //check for creepCount
-    if(typeof Memory.creepCount === 'undefined')
-    {
-        Memory.creepCount[Room.name] = {};
-    }
-    //create a harvester
-    //59 Game.spawns.Spawn1.createCreep([WORK, CARRY, CARRY, MOVE], null, {role: 'harvester',task: 'harvest'});
-    //74 Game.spawns.Spawn1.createCreep([WORK, WORK, CARRY, MOVE], null, {role: 'harvester',task: 'harvest'});
-    //Game.spawns.Spawn1.createCreep([WORK, CARRY, MOVE, MOVE], null, {role: 'harvester',task: 'harvest'});
-    Game.spawns.Spawn1.createCreep([WORK, WORK, CARRY, MOVE], null, {role: 'tractor',task: 'harvest'});
-    Memory.creepCount[Room.name]['tractor'] = 1;
-    Memory.creepCount[Room.name]['truck'] = 0;
-    Memory.init = true;
-    return;
 }
