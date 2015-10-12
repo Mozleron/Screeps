@@ -64,6 +64,7 @@ function initialize()
     //check for creepCount
     if(typeof Memory.creepCount === 'undefined')
     {
+        Memory.creepCount = {};
         Memory.creepCount[Room.name] = {};
     }
     //create a harvester
