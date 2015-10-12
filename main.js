@@ -1,5 +1,6 @@
-var harvester = require('harvester');
-
+//var harvester = require('harvester');
+var tractor = require('tractor');
+var truck = require('truck');
 var assault = require('assault');
 /* Game.spawns.Spawn1.createCreep([ATTACK, ATTACK, MOVE, MOVE, TOUGH, TOUGH, TOUGH, TOUGH], null, {role: 'assault'}); */
 module.exports.loop = function () 
@@ -11,13 +12,28 @@ module.exports.loop = function ()
 	for(var name in Game.creeps) {
 		var creep = Game.creeps[name];
 
-		if(creep.memory.role === 'harvester') 
+		/*if(creep.memory.role === 'harvester') 
 		{
 			harvester(creep);
-		}
+		}*/
         if(creep.memory.role === 'assault')
         {
             assault(creep);
+        }
+        if(creep.memory.role === 'tractor')
+        {
+            tractor(creep);
+        }
+        if(Memory.creepCount[Room.name]['truck'] === 0)
+        {
+            if(Room.spawns[0].energy > 200)
+            {
+                Room.spawns[0].createCreep([CARRY, CARRY, MOVE, MOVE], null, {role: 'truck',task: 'harvest'});
+            }
+        }
+        if(creep.memory.role === 'truck')
+        {
+            truck(creep);
         }
 		/*if(creep.memory.role === 'builder') {
 		
@@ -137,12 +153,15 @@ function initialize()
     //check for creepCount
     if(typeof Memory.creepCount === 'undefined')
     {
-        Memory.creepCount = {};
+        Memory.creepCount[Room.name] = {};
     }
     //create a harvester
     //59 Game.spawns.Spawn1.createCreep([WORK, CARRY, CARRY, MOVE], null, {role: 'harvester',task: 'harvest'});
     //74 Game.spawns.Spawn1.createCreep([WORK, WORK, CARRY, MOVE], null, {role: 'harvester',task: 'harvest'});
-    Game.spawns.Spawn1.createCreep([WORK, CARRY, MOVE, MOVE], null, {role: 'harvester',task: 'harvest'});
+    //Game.spawns.Spawn1.createCreep([WORK, CARRY, MOVE, MOVE], null, {role: 'harvester',task: 'harvest'});
+    Game.spawns.Spawn1.createCreep([WORK, WORK, CARRY, MOVE], null, {role: 'tractor',task: 'harvest'});
+    Memory.creepCount[Room.name]['tractor'] = 1;
+    Memory.creepCount[Room.name]['truck'] = 0;
     Memory.init = true;
     return;
 }
