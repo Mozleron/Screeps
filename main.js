@@ -9,6 +9,16 @@ module.exports.loop = function ()
     {
         initialize();
     }
+    if(Memory.creepCount[Room.name]['truck'] === 0)
+    {
+        var localSpawn = Game.getObjectById(Memory.buildingList[Room.name]['spawns'][0]);
+        Console.log("localSpawn: "+localSpawn);
+        if(localSpawn > 200)
+        {
+            localSpawn.createCreep([CARRY, CARRY, MOVE, MOVE], null, {role: 'truck',task: 'harvest'});
+            Memory.creepCount[Room.name]["truck"]++;
+        }
+    }
 	for(var name in Game.creeps) 
     {
 		var creep = Game.creeps[name];
@@ -25,14 +35,7 @@ module.exports.loop = function ()
         {
             tractor(creep);
         }
-        if(Memory.creepCount[Room.name]['truck'] === 0)
-        {
-            var localSpawn = Game.getObjectById(Memory.buildingList[Room.name]['spawns'][0]);
-            if(localSpawn > 200)
-            {
-                localSpawn.createCreep([CARRY, CARRY, MOVE, MOVE], null, {role: 'truck',task: 'harvest'});
-            }
-        }
+
         if(creep.memory.role === 'truck')
         {
             truck(creep);
