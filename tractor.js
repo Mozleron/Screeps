@@ -58,8 +58,8 @@
                         {
                             creep.memory.action = "unload";
                             creep.memory.target = creep.pos.findClosestByRange(creep.room.find(FIND_MY_CREEPS, {
-                                filter: {role: "truck"}
-                            })).id;
+                                filter: {role: 'truck'}
+                                })).id;
                         }
 	                }
 	                break;
