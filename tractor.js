@@ -57,9 +57,13 @@
                         else
                         {
                             creep.memory.action = "unload";
-                            creep.memory.target = creep.pos.findClosestByRange(creep.room.find(FIND_MY_CREEPS, {
+                            var c = creep.room.find(FIND_MY_CREEPS, {filter: {role: 'truck'}});
+                            console.log("c: "+c);
+                            var cc = creep.pos.findClosestByRange(c);
+                            console.log("cc: "+cc);
+                            /*creep.memory.target = creep.pos.findClosestByRange(creep.room.find(FIND_MY_CREEPS, {
                                 filter: {role: 'truck'}
-                                })).id;
+                                })).id;*/
                         }
 	                }
 	                break;
