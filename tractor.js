@@ -61,12 +61,10 @@
                             console.log("c: "+c);
                             var cc = creep.pos.findClosestByRange(c).id;
                             console.log("cc: "+cc);*/
-                            //creep.memory.target = creep.pos.findClosestByRange(creep.room.find(FIND_MY_CREEPS, {
-                            //    memory: {role: 'truck'}
-                            //    }));
-                            require("lodash");
-                            var c = _(Game.creeps).filter({memory:{role:'truck'}});
-                            console.log("c: "+c);
+                            creep.memory.target = creep.pos.findClosestByRange(creep.room.find(FIND_MY_CREEPS, {
+                                memory: {role: 'truck'}
+                                }));
+                               
                         }
 	                }
 	                break;
