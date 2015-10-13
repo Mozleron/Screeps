@@ -23,8 +23,8 @@ module.exports.loop = function ()
     if(Memory.creepCount[Room.name]['truck'] === 0)
     {
         var localSpawn = Game.getObjectById(Memory.buildingList[Room.name]['spawns'][0]);
-        console.log("localSpawn: "+localSpawn);
-        if(localSpawn > 200)
+        console.log("localSpawn.energy: "+localSpawn.energy);
+        if(localSpawn.energy > 200)
         {
             localSpawn.createCreep([CARRY, CARRY, MOVE, MOVE], null, {role: 'truck',task: 'harvest'});
             Memory.creepCount[Room.name]["truck"]++;
