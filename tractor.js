@@ -38,7 +38,11 @@
 	                {
 	                    //console.log("harvesting from "+creep.memory.target.id);
 	                    //console.log("harvest result: "+
-	                    creep.harvest(Game.getObjectById(creep.memory.target));
+                        var hr = creep.harvest(Game.getObjectById(creep.memory.target))
+	                    if(hr !== 0)
+                        {
+                            console.log("Error trying to harvest: "+ hr);
+                        }
 	                    //);
 	                }
 	                else
