@@ -47,7 +47,7 @@
 	                }
 	                else
 	                {
-                        if(Memory.creepCount[Room.name]['truck'] === 0)
+                        if(Memory.creepCount[Room.name]["truck"] === 0)
                         {
                             
                             creep.memory.action = "move";
@@ -64,7 +64,7 @@
 	                }
 	                break;
 	            case 'unload':
-                    if(Memory.creepCount[Room.name]['truck'] === 0)
+                    if(Memory.creepCount[Room.name]["truck"] === 0)
                     {
                         if(creep.carry.energy > 0)
                         {
