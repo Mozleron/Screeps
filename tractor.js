@@ -57,13 +57,13 @@
                         else
                         {
                             creep.memory.action = "unload";
-                            var c = creep.room.find(FIND_MY_CREEPS, {filter: function(e) {if(e.memory.role === "truck"){return true;}else{return false;}}});
+                            /*var c = creep.room.find(FIND_MY_CREEPS, {filter: function(e) {if(e.memory.role === "truck"){return true;}else{return false;}}});
                             console.log("c: "+c);
                             var cc = creep.pos.findClosestByRange(c).id;
-                            console.log("cc: "+cc);
-                            /*creep.memory.target = creep.pos.findClosestByRange(creep.room.find(FIND_MY_CREEPS, {
-                                filter: {memory.role: 'truck'}
-                                })).id;*/
+                            console.log("cc: "+cc);*/
+                            creep.memory.target = creep.pos.findClosestByRange(creep.room.find(FIND_MY_CREEPS, {
+                                memory: {role: 'truck'}
+                                })).id;
                         }
 	                }
 	                break;
