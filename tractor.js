@@ -16,9 +16,8 @@
 	        {
                 var sources = creep.room.find(FIND_SOURCES);
                 creep.memory.target = sources[0].id;
+                creep.memory.action = "move";
             }
-            creep.memory.action = "move";
-        	
 	        switch(creep.memory.action)
 	        {
 	            case 'move':
@@ -48,7 +47,8 @@
                         {
                             
                             creep.memory.action = "move";
-                            creep.memory.target = creep.room.find(FIND_MY_SPAWNS)[0].id;
+                            creep.memory.target = creep.pos.findClosestByRange(creep.room.find(FIND_MY_SPAWNS)).id;
+                            //creep.memory.target = creep.room.find(FIND_MY_SPAWNS)[0].id;
                         }
                         else
                         {
