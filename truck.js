@@ -14,11 +14,9 @@
 		 case 'harvest':
 		 	if(typeof creep.memory.target === "undefined" || creep.memory.target === "undefined")
 			 {
-				 creep.memory.target = creep.pos.findClosestByRange(creep.room.find(FIND_MY_CREEPS, {
-					 filter: {role: "tractor"}
-				 })).id;
+				 creep.memory.target = creep.pos.findClosestByRange(creep.room.find(FIND_MY_CREEPS, {filter: function(e){if(e.role === "tractor"){console.log(e.id);return true;}}})).id;
+				 creep.memory.action = "move";
 			 }
-			 creep.memory.action = "move";
 			 switch(creep.memory.action)
 			 {
 				 case 'move':
