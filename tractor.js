@@ -57,7 +57,7 @@
                         else
                         {
                             creep.memory.action = "unload";
-                            var c = creep.room.find(FIND_MY_CREEPS, {filter: function(e) {return e.role === "truck"}});
+                            var c = creep.room.find(FIND_MY_CREEPS, {filter: function(e) {console.log("e: "+e)}});
                             console.log("c: "+c);
                             var cc = creep.pos.findClosestByRange(c);
                             console.log("cc: "+cc);
