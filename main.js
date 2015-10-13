@@ -42,9 +42,10 @@ module.exports.loop = function ()
         }
         if(Memory.creepCount[Room.name]['truck'] === 0)
         {
-            if(Room.spawns[0].energy > 200)
+            var localSpawn = Game.getObjectById(Memory.buildingList[Room.name]['spawns'][0]);
+            if(localSpawn > 200)
             {
-                Room.spawns[0].createCreep([CARRY, CARRY, MOVE, MOVE], null, {role: 'truck',task: 'harvest'});
+                localSpawn.createCreep([CARRY, CARRY, MOVE, MOVE], null, {role: 'truck',task: 'harvest'});
             }
         }
         if(creep.memory.role === 'truck')
@@ -115,10 +116,19 @@ function initialize()
         Memory.creepCount = {};
         Memory.creepCount[Room.name] = {};
     }
+    if(typeof Memory.buildingList === 'undefined')
+    {
+        Memory.buildingList = {};
+        Memory.buildingList[Room.name] = {};
+        Memory.buildingList[Room.name]['spawns'] = {};
+        Memory.buildingList[Room.name]['spawns'][0] = Game.spawns.Spawn1.id;
+        //More buildings to track go here?
+    }
     //create a harvester
     //59 Game.spawns.Spawn1.createCreep([WORK, CARRY, CARRY, MOVE], null, {role: 'harvester',task: 'harvest'});
     //74 Game.spawns.Spawn1.createCreep([WORK, WORK, CARRY, MOVE], null, {role: 'harvester',task: 'harvest'});
     //Game.spawns.Spawn1.createCreep([WORK, CARRY, MOVE, MOVE], null, {role: 'harvester',task: 'harvest'});
+    
     Game.spawns.Spawn1.createCreep([WORK, WORK, CARRY, MOVE], null, {role: 'tractor',task: 'harvest'});
     Memory.creepCount[Room.name]['tractor'] = 1;
     Memory.creepCount[Room.name]['truck'] = 0;
