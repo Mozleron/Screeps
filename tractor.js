@@ -63,7 +63,7 @@
                             console.log("cc: "+cc);*/
                             creep.memory.target = creep.pos.findClosestByRange(creep.room.find(FIND_MY_CREEPS, {
                                 memory: {role: 'truck'}
-                                }));
+                                })).id;
                                
                         }
 	                }
