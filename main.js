@@ -1,7 +1,12 @@
-var harvester = require('harvester');
+/*
+ * borrowing heavily from https://github.com/Snipey/Screeps/tree/master/dist
+ */
+//var harvester = require('harvester');
 
-var assault = require('assault');
-/* Game.spawns.Spawn1.createCreep([ATTACK, ATTACK, MOVE, MOVE, TOUGH, TOUGH, TOUGH, TOUGH], null, {role: 'assault'}); */
+//var assault = require('assault');
+
+var CreepSpawner = require('creep_spawner');
+var CreepRole = require('creep_role')();
 module.exports.loop = function () 
 {
     if(!Memory.init)
@@ -10,15 +15,18 @@ module.exports.loop = function ()
     }
 	for(var name in Game.creeps) {
 		var creep = Game.creeps[name];
+		if(creep.spawning || creep.memory.role === undefined || creep.memory.role === null)
+			continue;
+		creep.performRole();
 
-		if(creep.memory.role === 'harvester') 
+		/*if(creep.memory.role === 'harvester') 
 		{
 			harvester(creep);
 		}
         if(creep.memory.role === 'assault')
         {
             assault(creep);
-        }
+        }*/
 		/*if(creep.memory.role === 'builder') {
 		
 			if(creep.carry.energy === 0) {
@@ -38,6 +46,39 @@ module.exports.loop = function ()
 		if(!creep.spawning)
 		{
 		    routeCreep(creep,creep.memory.target);
+		}
+	}
+	for(var i in Game.rooms)
+	{
+		var room = Game.rooms[i];
+		console.log("Examining room: "+room);
+		
+	}
+	for(var i in Game.spawns)
+	{
+		var spawn = Game.spawns[i];
+		
+		if(spawn.spawning === null){
+			if(Memory.spawnQueue.length > 0)
+			{
+				console.log("    - Spawn has "+spawn.energy+"/"+CreepRole.getRoleCost(Memory.spawnQueue[0])+" needed energy");
+				if(spawn.energy >= CreepRole.getRoleCost(Memory.spawnQueue[0]))
+				{
+					if(Number.isInteger(spawn.createRole(CreepRole, Memory.spawnQueue[0])))
+					{
+						console.log("Creating creep: failed");
+					}
+					else
+					{
+						console.log("Creating creep: Success");
+						Memory.spawnQueue.shift();
+					}
+				}
+			}
+			else
+			{
+				console.log("    - Spawn has "+spawn.energy+"/"+spawn.energyCapacity+" and nothing in queue");
+			}
 		}
 	}
 }
@@ -133,16 +174,26 @@ function routeCreep(creep,destId)
 }
 
 function initialize()
-{
+{	
+	for(var i in Game.rooms)
+	}
+		Game.rooms[i].typename="home";
+
+	{
     //check for creepCount
     if(typeof Memory.creepCount === 'undefined')
     {
         Memory.creepCount = {};
     }
+    if(typeof Memory.spawnQueue === 'undefined')
+    {
+    	Memory.spawnQueue = [];
+    }
+    //Memory.spawnQueue.push('harvester');
     //create a harvester
     //59 Game.spawns.Spawn1.createCreep([WORK, CARRY, CARRY, MOVE], null, {role: 'harvester',task: 'harvest'});
     //74 Game.spawns.Spawn1.createCreep([WORK, WORK, CARRY, MOVE], null, {role: 'harvester',task: 'harvest'});
-    Game.spawns.Spawn1.createCreep([WORK, CARRY, MOVE, MOVE], null, {role: 'harvester',task: 'harvest'});
+    //Game.spawns.Spawn1.createCreep([WORK, CARRY, MOVE, MOVE], null, {role: 'harvester',task: 'harvest'});
     Memory.init = true;
     return;
 }
