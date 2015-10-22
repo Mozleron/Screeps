@@ -37,15 +37,7 @@ module.exports.loop = function ()
 			continue;
 		creep.performRole();
 
-		/*if(creep.memory.role === 'harvester') 
-		{
-			harvester(creep);
-		}
-        if(creep.memory.role === 'assault')
-        {
-            assault(creep);
-        }*/
-        }
+        
         if(creep.memory.role === 'tractor')
         {
             tractor(creep);
@@ -86,7 +78,8 @@ module.exports.loop = function ()
 	{
 		var spawn = Game.spawns[i];
 		
-		if(spawn.spawning === null){
+		if(spawn.spawning === null)
+		{
 			if(Memory.spawnQueue.length > 0)
 			{
 				console.log("    - Spawn has "+spawn.energy+"/"+CreepRole.getRoleCost(Memory.spawnQueue[0])+" needed energy");
@@ -111,7 +104,7 @@ module.exports.loop = function ()
 	}
 }
 
-function initialize()
+/*function initialize()
 {
     //check for creepCount
     if(typeof Memory.creepCount === 'undefined')
@@ -137,7 +130,7 @@ function initialize()
     Memory.creepCount[Room.name]['truck'] = 0;
     Memory.init = true;
     return;
-}
+}*/
 
 function routeCreep(creep,destId) 
 {
@@ -232,10 +225,9 @@ function routeCreep(creep,destId)
 function initialize()
 {	
 	for(var i in Game.rooms)
-	}
-		Game.rooms[i].typename="home";
-
 	{
+		Game.rooms[i].typename="home";
+	}
     //check for creepCount
     if(typeof Memory.creepCount === 'undefined')
     {
@@ -250,7 +242,7 @@ function initialize()
     //59 Game.spawns.Spawn1.createCreep([WORK, CARRY, CARRY, MOVE], null, {role: 'harvester',task: 'harvest'});
     //74 Game.spawns.Spawn1.createCreep([WORK, WORK, CARRY, MOVE], null, {role: 'harvester',task: 'harvest'});
     //Game.spawns.Spawn1.createCreep([WORK, CARRY, MOVE, MOVE], null, {role: 'harvester',task: 'harvest'});
-    Game.spawns.Spawn1.createCreep([WORK, WORK, CARRY, MOVE], null, {role: 'tractor',task: 'harvest'});
+    //Game.spawns.Spawn1.createCreep([WORK, WORK, CARRY, MOVE], null, {role: 'tractor',task: 'harvest'});
     Memory.creepCount[Room.name]['tractor'] = 1;
     Memory.creepCount[Room.name]['truck'] = 0;
     Memory.init = true;
