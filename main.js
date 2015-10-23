@@ -1,4 +1,3 @@
-
 /*
  * borrowing heavily from https://github.com/Snipey/Screeps/tree/master/dist
  */
@@ -8,7 +7,6 @@
 
 var CreepSpawner = require('creep_spawner');
 var CreepRole = require('creep_role')();
-//var harvester = require('harvester');
 var tractor = require('tractor');
 var truck = require('truck');
 var assault = require('assault');
@@ -36,7 +34,6 @@ module.exports.loop = function ()
 		if(creep.spawning || creep.memory.role === undefined || creep.memory.role === null)
 			continue;
 		creep.performRole();
-
         
         if(creep.memory.role === 'tractor')
         {
