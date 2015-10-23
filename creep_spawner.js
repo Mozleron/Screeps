@@ -27,6 +27,16 @@ Spawn.prototype.createRole = function(CreepRole, role, memory) {
 
     var out = this.createCreep(parts, name, memory)
     switch(out) {
+    case 0:
+    	if(!Memory.creepCount[Room.name].role)
+    	{
+    		Memory.creepCount[Room.name].role = 1;
+    	}
+    	else
+    	{
+    		Memory.creepCount[Room.name].role++;
+    	}
+    	break;
     case -1:
         console.log("Error spawning creep: You don't own this spawn.")
         break;
@@ -46,6 +56,5 @@ Spawn.prototype.createRole = function(CreepRole, role, memory) {
         console.log("Error spawning creep: You don't own this spawn.")
         break;
     }
-
     return out;
 }

@@ -1,17 +1,9 @@
 /*
  * borrowing heavily from https://github.com/Snipey/Screeps/tree/master/dist
  */
-//var harvester = require('harvester');
-
-//var assault = require('assault');
 
 var CreepSpawner = require('creep_spawner');
 var CreepRole = require('creep_role')();
-var tractor = require('tractor');
-var truck = require('truck');
-var assault = require('assault');
-/* Game.spawns.Spawn1.createCreep([ATTACK, ATTACK, MOVE, MOVE, TOUGH, TOUGH, TOUGH, TOUGH], null, {role: 'assault'}); */
-
 module.exports.loop = function () 
 {
     if(!Memory.init)
@@ -34,16 +26,7 @@ module.exports.loop = function ()
 		if(creep.spawning || creep.memory.role === undefined || creep.memory.role === null)
 			continue;
 		creep.performRole();
-        
-        if(creep.memory.role === 'tractor')
-        {
-            tractor(creep);
-        }
 
-        if(creep.memory.role === 'truck')
-        {
-            truck(creep);
-        }
 		/*if(creep.memory.role === 'builder') {
 		
 			if(creep.carry.energy === 0) {
@@ -240,8 +223,8 @@ function initialize()
     //74 Game.spawns.Spawn1.createCreep([WORK, WORK, CARRY, MOVE], null, {role: 'harvester',task: 'harvest'});
     //Game.spawns.Spawn1.createCreep([WORK, CARRY, MOVE, MOVE], null, {role: 'harvester',task: 'harvest'});
     //Game.spawns.Spawn1.createCreep([WORK, WORK, CARRY, MOVE], null, {role: 'tractor',task: 'harvest'});
-    Memory.creepCount[Room.name]['tractor'] = 1;
-    Memory.creepCount[Room.name]['truck'] = 0;
+    //Memory.creepCount[Room.name]['tractor'] = 1;
+    //Memory.creepCount[Room.name]['truck'] = 0;
     Memory.init = true;
     return;
 }

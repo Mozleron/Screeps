@@ -90,4 +90,5 @@
 			 	break;
 		 }
 	 }
+	 return truck;
  }
