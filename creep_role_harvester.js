@@ -13,7 +13,9 @@
  {
 	 var harvester = {
 			 parts: [[WORK, CARRY, MOVE, MOVE]],
-			 costs: [250]
+			 costs: [250],
+			 memories:[{role:'harvester'},
+			         {task:'harvest'}]
 	 };
 	 
 	 harvester.getPartsForExtensionCount = function(count) 
@@ -27,6 +29,12 @@
 	    return this.getPartsForExtensionCount(0)
 	},
 	
+	harvester.getMemories = function()
+	{
+		console.log("Memories: "+this.memory[0].task);
+		return this.memories[0];
+	},
+	
 	harvester.getCostForExtensionCount = function(count) 
 	{
 	    return this.costs[count]
@@ -37,8 +45,9 @@
 	    return this.getCostForExtensionCount(0)
 	},
 	 
-	 harvester.performRole = function(creep)
+	 harvester.performRole = function(CreepRole, creep)
 	 {
+		console.log("DEBUG harvester doing role");
 		switch(creep.memory.task)
 		{
 		    case 'harvest':

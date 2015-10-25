@@ -1,9 +1,6 @@
 /*
  * borrowing heavily from https://github.com/Snipey/Screeps/tree/master/dist
  */
-//var harvester = require('harvester');
-
-//var assault = require('assault');
 
 var CreepSpawner = require('creep_spawner');
 var CreepRole = require('creep_role')();
@@ -13,36 +10,27 @@ module.exports.loop = function ()
     {
         initialize();
     }
-	for(var name in Game.creeps) {
+    if(Memory.creepCount[Room.name]['truck'] === 0)
+    {
+        //var localSpawn = Game.getObjectById(Memory.buildingList[Room.name]['spawns'][0]);
+        //console.log("localSpawn.energy: "+localSpawn.energy);
+        /*if(localSpawn.energy > 200)
+        {
+            localSpawn.createCreep([CARRY, CARRY, MOVE, MOVE], null, {role: 'truck',task: 'harvest'});
+            Memory.creepCount[Room.name]["truck"]++;
+        }*/
+    }
+    if(Memory.creepCount[Room.name]['harvester'] === 0)
+    {
+    	Memory.spawnQueue.push("harvester");
+    }
+	for(var name in Game.creeps) 
+    {
 		var creep = Game.creeps[name];
 		if(creep.spawning || creep.memory.role === undefined || creep.memory.role === null)
-			continue;
-		creep.performRole();
+			{continue;}
+		creep.performRole(CreepRole);
 
-		/*if(creep.memory.role === 'harvester') 
-		{
-			harvester(creep);
-		}
-        if(creep.memory.role === 'assault')
-        {
-            assault(creep);
-        }*/
-		/*if(creep.memory.role === 'builder') {
-		
-			if(creep.carry.energy === 0) {
-				if(Game.spawns.Spawn1.transferEnergy(creep) == ERR_NOT_IN_RANGE) {
-					creep.moveTo(Game.spawns.Spawn1);				
-				}
-			}
-			else {
-				var targets = creep.room.find(FIND_CONSTRUCTION_SITES);
-				if(targets.length) {
-					if(creep.build(targets[0]) === ERR_NOT_IN_RANGE) {
-						creep.moveTo(targets[0]);					
-					}
-				}
-			}
-		}*/
 		if(!creep.spawning)
 		{
 		    routeCreep(creep,creep.memory.target);
@@ -50,7 +38,7 @@ module.exports.loop = function ()
 	}
 	for(var i in Game.rooms)
 	{
-		var room = Game.rooms[i];
+		var room = Room.name;// Game.rooms[i];
 		console.log("Examining room: "+room);
 		
 	}
@@ -58,7 +46,8 @@ module.exports.loop = function ()
 	{
 		var spawn = Game.spawns[i];
 		
-		if(spawn.spawning === null){
+		if(spawn.spawning === null)
+		{
 			if(Memory.spawnQueue.length > 0)
 			{
 				console.log("    - Spawn has "+spawn.energy+"/"+CreepRole.getRoleCost(Memory.spawnQueue[0])+" needed energy");
@@ -176,14 +165,18 @@ function routeCreep(creep,destId)
 function initialize()
 {	
 	for(var i in Game.rooms)
-	}
-		Game.rooms[i].typename="home";
-
 	{
+		Game.rooms[i].typename="home";
+	}
     //check for creepCount
     if(typeof Memory.creepCount === 'undefined')
     {
-        Memory.creepCount = {};
+    	Memory.creepCount = {};
+        Memory.creepCount[Room.name] = {};
+        Memory.creepCount[Room.name]['assault'] = 0;
+        Memory.creepCount[Room.name]['harvester'] = 0;
+        Memory.creepCount[Room.name]['tractor'] = 0;
+        Memory.creepCount[Room.name]['truck'] = 0;
     }
     if(typeof Memory.spawnQueue === 'undefined')
     {
@@ -194,6 +187,9 @@ function initialize()
     //59 Game.spawns.Spawn1.createCreep([WORK, CARRY, CARRY, MOVE], null, {role: 'harvester',task: 'harvest'});
     //74 Game.spawns.Spawn1.createCreep([WORK, WORK, CARRY, MOVE], null, {role: 'harvester',task: 'harvest'});
     //Game.spawns.Spawn1.createCreep([WORK, CARRY, MOVE, MOVE], null, {role: 'harvester',task: 'harvest'});
+    //Game.spawns.Spawn1.createCreep([WORK, WORK, CARRY, MOVE], null, {role: 'tractor',task: 'harvest'});
+    //Memory.creepCount[Room.name]['tractor'] = 1;
+    //Memory.creepCount[Room.name]['truck'] = 0;
     Memory.init = true;
     return;
 }

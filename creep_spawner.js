@@ -3,7 +3,7 @@
  * borrowed from https://github.com/Snipey/Screeps/tree/master/dist
  */
 
-Spawn.prototype.createRole = function(CreepRole, role, memory) {
+Spawn.prototype.createRole = function(CreepRole, role) {
     var nameCount = null
     var name = null
     while(name == null) {
@@ -13,11 +13,19 @@ Spawn.prototype.createRole = function(CreepRole, role, memory) {
             name = tryName
     }
 
-    if(memory == undefined)
-        memory = {}
+    //if(memory == undefined)
+    //    memory = {}
 
-    memory['role'] = role
-
+    var memory = CreepRole.getMemory(role);
+    if(memory === null || memory === undefined)
+    {
+    	console.log("No Memory!");
+    }
+    else
+    {
+    	console.log("Memory: "+role+":"+memory);
+    }
+    
     var parts = CreepRole.getRoleParts(role)
     if(parts == null || parts == undefined) {
         console.log("No parts!")
@@ -45,7 +53,17 @@ Spawn.prototype.createRole = function(CreepRole, role, memory) {
     case -14:
         console.log("Error spawning creep: You don't own this spawn.")
         break;
+    default:
+    	console.log("creating creep: "+ out);
+    	if(!Memory.creepCount[Room.name][role])
+    	{
+    		Memory.creepCount[Room.name][role] = 1;
+    	}
+    	else
+    	{
+    		Memory.creepCount[Room.name][role]++;
+    	}
+    	break;
     }
-
     return out;
 }
