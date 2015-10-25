@@ -8,7 +8,8 @@
  module.exports = function(creep){
 	 var assault = {
 			 parts: [[TOUGH, TOUGH, ATTACK, ATTACK, MOVE, MOVE]],
-			 costs: [280]	 
+			 costs: [280],
+			 memory:[{Squad:[]}]
 	 };
 	 
 	 assault.getPartsForExtensionCount = function(count) 
@@ -20,7 +21,10 @@
 	 {
 		 return this.getPartsForExtensionCount(0);
 	 },
-	 
+	 assault.getMemories = function()
+	 {
+		 return this.memory[0];
+	 },
 	 assault.getCostForExtensionCount = function(count)
 	 {
 		 return this.costs[count];
@@ -31,7 +35,7 @@
 		 return this.getCostForExtensionCount(0);
 	 },
 	 
-	 assault.performRole = function(creep)
+	 assault.performRole = function(CreepRole, creep)
 	 {		 
 	     var targets = creep.room.find(FIND_HOSTILE_CREEPS, {filter: function(i){
 	         if(i.owner.username !== 'Source Keeper'){

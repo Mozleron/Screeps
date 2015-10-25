@@ -17,7 +17,8 @@
 			 costs: [300,
 			         600,
 			         900,
-			         1200]
+			         1200],
+	 		 memory:[{Squad:[]}]
 	 };
 	 
 	 truck.getPartsForExtensionCount = function(count)
@@ -30,7 +31,10 @@
 	 {
 		 return this.getPartsForExtensionCount(0);
 	 },
-	 
+	 truck.getMemories = function()
+	 {
+		 return this.memory[0];
+	 },
 	 truck.getCostForExtensionCount = function(count)
 	 {
 		 return this.costs[count];
@@ -41,7 +45,7 @@
 		 return this.getCostForExtensionCount(0);
 	 },
 	 
-	 truck.performRole = function(creep)
+	 truck.performRole = function(CreepRole, creep)
 	 {
 		 switch(creep.memory.task)
 		 {

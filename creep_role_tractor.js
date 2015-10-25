@@ -13,7 +13,8 @@
 			 parts: [[WORK,WORK,CARRY,MOVE],
 			         [WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE]],
 			 costs: [300,
-			         1250]
+			         1250],
+			 memory:[{Squad:[]}]
 	 };
 	 
 	 tractor.getPartsForExtensionCount = function(count)
@@ -26,7 +27,10 @@
 	 {
 		 return this.getPartsForExtensionCount(0);
 	 },
-	 
+	 tractor.getMemories = function()
+	 {
+		 return this.memory[0];
+	 },
 	 tractor.getCostForExtensionCount = function(count)
 	 {
 		 return this.costs[count];
@@ -37,7 +41,7 @@
 		 return this.getCostForExtensionCount(0);
 	 },
 	 
-	 tractor.performRole = function(creep)
+	 tractor.performRole = function(CreepRole, creep)
 	 {
 		switch(creep.memory.task)
 		{
@@ -77,6 +81,15 @@
 		                }
 		                else
 		                {
+		                	if(creep.memory.haulSquad.length === 0)
+		                	{
+	                            creep.memory.action = "move";
+	                            creep.memory.target = creep.pos.findClosestByRange(creep.room.find(FIND_MY_SPAWNS)).id;
+		                	}
+		                	else
+		                	{
+		                		
+		                	}
 	                        if(Memory.creepCount[Room.name]["truck"] === 0)
 	                        {
 	                            

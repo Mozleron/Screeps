@@ -6,14 +6,19 @@
 module.exports = function() {
     var creep_role = { }
 
-    creep_role.getRole = function(name) {
-        try {
-            if(this[name] == null || this[name] == undefined) {
-                this[name] = require("creep_role_"+name)()
+    creep_role.getRole = function(name) 
+    {
+        try 
+        {
+            if(this[name] == null || this[name] == undefined) 
+            {
+                this[name] = require("creep_role_"+name)();
             }
             //console.log("Role method:"+this[name])
-            return this[name]
-        } catch (e) {
+            return this[name];
+        } 
+        catch (e) 
+        {
             console.log("Role "+name+" not found! Returning null.")
             console.log(e)
             return null
@@ -34,6 +39,27 @@ module.exports = function() {
                 return null;
             }
         }
+    }
+    
+    creep_role.getMemory = function(name){
+    	var r = this.getRole(name)
+    	if(r === null || r === undefined){
+    		return null;
+    	}
+    	else
+    	{
+    		try
+    		{
+    			return r.getMemories();
+    		}
+    		catch(e)
+    		{
+    			console.log("Memories method not found.");
+    			console.log(e);
+    			console.log(Object.keys(r));
+    			return null;
+    		}
+    	}
     }
 
     creep_role.getRoleCost = function(name) {
@@ -72,9 +98,9 @@ module.exports = function() {
     }
 
     Creep.prototype.performRole = function(CreepRole) {
-        CreepRole.getRole(this.memory.role).performRole(CreepRole, this)
+    	CreepRole.getRole(this.memory.role).performRole(CreepRole, this);
     }
 
-    return creep_role
+    return creep_role;
 
 }

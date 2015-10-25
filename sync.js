@@ -100,7 +100,7 @@ fs.watch(__dirname, function(ev, file) {
 // Localhost HTTP server
 var options = {
 	pfx: fs.readFileSync('ScreepsCert.pfx'),
-	passphrase: 'Ratboy96'
+	passphrase: 'Screeps'
 };
 var server = https.createServer(options, function(req, res) {
 	var path = URL.parse(req.url, true);
