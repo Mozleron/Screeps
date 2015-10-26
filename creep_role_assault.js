@@ -9,7 +9,7 @@
 	 var assault = {
 			 parts: [[TOUGH, TOUGH, ATTACK, ATTACK, MOVE, MOVE]],
 			 costs: [280],
-			 memory:[{Squad:[]}]
+			 memories:{role:'assault', task:'harvest'}
 	 };
 	 
 	 assault.getPartsForExtensionCount = function(count) 
@@ -23,7 +23,7 @@
 	 },
 	 assault.getMemories = function()
 	 {
-		 return this.memory[0];
+		 return this.memories;
 	 },
 	 assault.getCostForExtensionCount = function(count)
 	 {

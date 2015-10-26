@@ -11,10 +11,14 @@
  {
 	 var tractor = {
 			 parts: [[WORK,WORK,CARRY,MOVE],
-			         [WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE]],
+			         [WORK,WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE],
+			         [WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE],
+			         [WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE]],
 			 costs: [300,
-			         1250],
-			 memory:[{Squad:[]}]
+			         600,
+			         800,
+			         1100],
+			 memories:{role:'tractor', task:'harvest'}
 	 };
 	 
 	 tractor.getPartsForExtensionCount = function(count)
@@ -29,7 +33,7 @@
 	 },
 	 tractor.getMemories = function()
 	 {
-		 return this.memory[0];
+		 return this.memories;
 	 },
 	 tractor.getCostForExtensionCount = function(count)
 	 {

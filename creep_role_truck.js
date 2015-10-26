@@ -18,7 +18,7 @@
 			         600,
 			         900,
 			         1200],
-	 		 memory:[{Squad:[]}]
+			 memories:{role:'truck', task:'harvest'}
 	 };
 	 
 	 truck.getPartsForExtensionCount = function(count)
@@ -33,7 +33,7 @@
 	 },
 	 truck.getMemories = function()
 	 {
-		 return this.memory[0];
+		 return this.memories;
 	 },
 	 truck.getCostForExtensionCount = function(count)
 	 {

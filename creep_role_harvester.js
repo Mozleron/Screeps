@@ -30,7 +30,6 @@
 	
 	harvester.getMemories = function()
 	{
-		console.log("Memories: "+this.memories.task);
 		return this.memories;
 	},
 	
