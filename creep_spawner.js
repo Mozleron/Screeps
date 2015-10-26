@@ -15,7 +15,7 @@ Spawn.prototype.createRole = function(CreepRole, role) {
 
     //if(memory == undefined)
     //    memory = {}
-
+    console.log("calling getMemory() for role: "+role);
     var memory = CreepRole.getMemory(role);
     if(memory === null || memory === undefined)
     {

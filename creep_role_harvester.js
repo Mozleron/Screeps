@@ -14,8 +14,7 @@
 	 var harvester = {
 			 parts: [[WORK, CARRY, MOVE, MOVE]],
 			 costs: [250],
-			 memories:[{role:'harvester'},
-			         {task:'harvest'}]
+			 memories:{role:'harvester', task:'harvest'}
 	 };
 	 
 	 harvester.getPartsForExtensionCount = function(count) 
@@ -31,8 +30,8 @@
 	
 	harvester.getMemories = function()
 	{
-		console.log("Memories: "+this.memory[0].task);
-		return this.memories[0];
+		console.log("Memories: "+this.memories.task);
+		return this.memories;
 	},
 	
 	harvester.getCostForExtensionCount = function(count) 
