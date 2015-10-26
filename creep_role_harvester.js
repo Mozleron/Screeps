@@ -45,7 +45,6 @@
 	 
 	 harvester.performRole = function(CreepRole, creep)
 	 {
-		console.log("DEBUG harvester doing role");
 		switch(creep.memory.task)
 		{
 		    case 'harvest':
@@ -78,10 +77,12 @@
 		                    if(creep.carry.energy < creep.carryCapacity)
 		                    {
 		                        creep.memory.action = "collect";
+		                        creep.say("collecting");
 		                    }
 		                    else
 		                    {
 		                        creep.memory.action = "unload";
+		                        creep.say("unloading");
 		                    }
 		                }
 		                break;
@@ -112,6 +113,7 @@
 		                {
 		                    creep.memory.action = "move";
 		                    creep.memory.target = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE).id;
+		                    creep.say("beep beep! Moving out!");
 						}
 		                break;
 		            case 'idle':

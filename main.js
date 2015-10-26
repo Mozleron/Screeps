@@ -29,19 +29,24 @@ module.exports.loop = function ()
 		var creep = Game.creeps[name];
 		if(creep.spawning || creep.memory.role === undefined || creep.memory.role === null)
 			{continue;}
+		console.log("routing creep");
+	    routeCreep(creep,creep.memory.target);
+	    creep.memory.testFullPath = creep.pos.findPathTo(Game.getObjectById(creep.memory.target).pos);
+	    creep.memory.testSerialPath = Room.serializePath(creep.memory.testFullPath);
+	    console.log(creep.memory.testSerialPath);
 		creep.performRole(CreepRole);
 
-		if(!creep.spawning)
-		{
-		    routeCreep(creep,creep.memory.target);
-		}
+
+	    //console.log(creep.pos.findPathTo(Game.getObjectById(creep.memory.target).pos));
+	    //console.log(Room.serializePath(creep.room.findPath(creep.pos, Game.getObjectById(creep.memory.target))));
+
 	}
-	for(var i in Game.rooms)
+	/*for(var i in Game.rooms)
 	{
 		var room = Room.name;// Game.rooms[i];
 		console.log("Examining room: "+room);
 		
-	}
+	}*/
 	for(var i in Game.spawns)
 	{
 		var spawn = Game.spawns[i];

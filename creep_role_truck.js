@@ -82,6 +82,7 @@
 					 	var target = Game.getObjectById(creep.memory.target);
 						var deficit = target.energyCapacity - target.energy;
 						creep.transferEnergy(target, (deficit > creep.carry.energy) ? creep.carry.energy: deficit);
+						
 						break;
 					default:
 						creep.memory.action = "move";
