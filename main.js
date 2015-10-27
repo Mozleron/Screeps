@@ -29,12 +29,13 @@ module.exports.loop = function ()
 		var creep = Game.creeps[name];
 		if(creep.spawning || creep.memory.role === undefined || creep.memory.role === null)
 			{continue;}
+		creep.performRole(CreepRole);
 		console.log("routing creep");
 	    routeCreep(creep,creep.memory.target);
 	    creep.memory.testFullPath = creep.pos.findPathTo(Game.getObjectById(creep.memory.target).pos);
 	    creep.memory.testSerialPath = Room.serializePath(creep.memory.testFullPath);
 	    console.log(creep.memory.testSerialPath);
-		creep.performRole(CreepRole);
+		
 
 
 	    //console.log(creep.pos.findPathTo(Game.getObjectById(creep.memory.target).pos));
@@ -77,6 +78,22 @@ module.exports.loop = function ()
 	}
 }
 
+function selfRouteCreep(creep,destId)
+{
+	if(creep.fatigue>0)
+		return -1;
+	if(typeof destId=== "undefined")
+		return -1;
+	else
+		var dest = Game.getObjectById(destId);
+	
+	if(creep.memory.pathCache === "undefined" || creep.memory.pathCache === null)
+	{
+		creep.memory.pathCache = creep.findPathTo(dest,{ignoreCreeps:true,maxOps:500,heuristicWeight:2,serialize:true});
+	}
+	creep.moveByPath(creep.memory.pathCache);
+}
+
 function routeCreep(creep,destId) 
 {
     if(creep.fatigue>0)
@@ -101,6 +118,14 @@ function routeCreep(creep,destId)
     if(typeof Memory.routeCache[locStr]['dests'][''+dest.id] === "undefined")
     {    
         Memory.routeCache[locStr]['dests'][dest.id] = {1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0};
+        if(Memory.findPathCalled === "undefined" || Memory.findPathCalled === null)
+        {
+        	Memory.findPathCalled = 1;
+        }
+        else
+        {
+        	Memory.findPathCalled++;
+        }
         path = creep.room.findPath(creep.pos,dest.pos,{maxOps:500,heuristicWeight:2})
         
         if(typeof path[0] !== "undefined")
