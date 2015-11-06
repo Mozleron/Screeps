@@ -33,7 +33,15 @@ module.exports.loop = function ()
 			{continue;}
 		creep.performRole(CreepRole);
 		//console.log("routing creep");
-	    console.log(creep.name+": route result: " + routeCreep(creep,creep.memory.target));
+	    //console.log(creep.name+": route result: " + routeCreep(creep,creep.memory.target));
+		if(creep.memory.role === 'tractor')
+		{
+			selfRouteCreep(creep, creep.memory.target);
+		}
+		else
+		{
+			routeCreep(creep, creep.memory.target);
+		}
 	    //creep.memory.testFullPath = creep.pos.findPathTo(Game.getObjectById(creep.memory.target).pos);
 	    //creep.memory.testSerialPath = Room.serializePath(creep.memory.testFullPath);
 	    //console.log(creep.memory.testSerialPath);
@@ -83,17 +91,40 @@ module.exports.loop = function ()
 function selfRouteCreep(creep,destId)
 {
 	if(creep.fatigue>0)
-		return -1;
-	if(typeof destId=== "undefined")
-		return -1;
+    {return -1;}
+    if(typeof destId === "undefined")
+    {return -1;}
 	else
-		var dest = Game.getObjectById(destId);
+	{	var dest = Game.getObjectById(destId);}
 	
-	if(creep.memory.pathCache === "undefined" || creep.memory.pathCache === null)
+	if(typeof creep.memory.pathCache === "undefined" || creep.memory.pathCache === "undefined")
 	{
-		creep.memory.pathCache = creep.findPathTo(dest,{ignoreCreeps:false,maxOps:500,heuristicWeight:2,serialize:true});
+		creep.memory.pathCache = creep.pos.findPathTo(dest,{ignoreCreeps:false,maxOps:500,heuristicWeight:2,serialize:true});
+		console.log("creep.memory.pathCache: "+creep.memory.pathCache);
 	}
+	//var currentPos = creep.pos;
 	creep.moveByPath(creep.memory.pathCache);
+	if(creep.memory.lastPos === creep.pos)
+	{
+		console.log("Stuck, didn't move when we should have?");
+		if(creep.pos.getRangeTo(dest) > 1)
+		{
+			console.log("Yea, not to destination yet");
+			var nextDir = Room.deserializePath(creep.memory.pathCache)[0].direction;
+			console.log("we were going to go in direction: "+nextDir);
+			if(nextDir != TOP)
+			{
+				nextDir++;
+			}
+			else
+			{
+				nextDir = TOP;
+			}
+			console.log("But now we're going in direction: "+nextDir);
+			creep.move(nextDir);
+		}
+	}
+	creep.memory.lastPos = creep.pos;
 }
 
 function routeCreep(creep,destId) 

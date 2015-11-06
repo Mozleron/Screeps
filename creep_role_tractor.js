@@ -64,10 +64,12 @@
 		                    if(creep.carry.energy < creep.carryCapacity)
 		                    {
 		                        creep.memory.action = "collect";
+		                        creep.memory.pathCache = 'undefined';
 		                    }
 		                    else
 		                    {
 		                        creep.memory.action = "unload";
+		                        creep.memory.pathCache = 'undefined';
 		                    }
 		                }
 		                break;
