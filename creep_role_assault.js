@@ -7,9 +7,17 @@
  */
  module.exports = function(creep){
 	 var assault = {
-			 parts: [[TOUGH, TOUGH, ATTACK, ATTACK, MOVE, MOVE]],
-			 costs: [280],
-			 memories:{role:'assault', task:'harvest'}
+			 parts: [[TOUGH, TOUGH, ATTACK, ATTACK, MOVE, MOVE],
+			         [ATTACK, ATTACK, ATTACK, MOVE, MOVE, MOVE],
+			         [ATTACK, ATTACK, ATTACK, ATTACK, MOVE, MOVE, MOVE, MOVE],
+			         [ATTACK, MOVE, ATTACK, MOVE, ATTACK, MOVE, ATTACK, MOVE, ATTACK, MOVE],
+			         [ATTACK, MOVE, ATTACK, MOVE, ATTACK, MOVE, ATTACK, MOVE, ATTACK, MOVE, ATTACK, MOVE, ATTACK, MOVE, ATTACK, MOVE, ATTACK, MOVE, ATTACK, MOVE]],
+			 costs: [280,
+			         390,
+			         520,
+			         650,
+			         1300],
+			 memories:{role:'assault', task:'defend'}
 	 };
 	 
 	 assault.getPartsForExtensionCount = function(count) 

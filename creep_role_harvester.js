@@ -12,8 +12,10 @@
  module.exports = function (creep) 
  {
 	 var harvester = {
-			 parts: [[WORK, CARRY, MOVE, MOVE]],
-			 costs: [250],
+			 parts: [[WORK, CARRY, MOVE, MOVE],
+			         [WORK, WORK, CARRY, MOVE, MOVE]],
+			 costs: [250,
+			 		 350],
 			 memories:{role:'harvester', task:'harvest'}
 	 };
 	 
