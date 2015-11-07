@@ -18,7 +18,7 @@
 			         600,
 			         800,
 			         1100],
-			 memories:{role:'tractor', task:'harvest'}
+			 memories:{role:'tractor', task:'harvest', trucksRequested:0, haulSquad:[]}
 	 };
 	 
 	 tractor.getPartsForExtensionCount = function(count)
@@ -45,6 +45,19 @@
 		 return this.getCostForExtensionCount(0);
 	 },
 	 
+	 tractor.getNearestTruckId = function(creep, list)
+	 {
+		 var nearest = Game.getObjectById(list[0]);
+		 for(var i = 0, len = list.length; i < len; i++)
+		 {
+			 if(creep.pos.getRangeTo(nearest) > creep.pos.getRangeTo(Game.getObjectById(list[i])))
+			 {
+				 nearest = Game.getObjectById(list[i]);
+			 }
+		 }
+		 return nearest.id;
+	 },
+	 
 	 tractor.performRole = function(CreepRole, creep)
 	 {
 		switch(creep.memory.task)
@@ -56,124 +69,88 @@
 	                creep.memory.target = sources[0].id;
 	                creep.memory.action = "move";
 	            }
-		        switch(creep.memory.action)
+		        if(creep.memory.action === 'move')
 		        {
-		            case 'move':
-		                if(creep.pos.getRangeTo(Game.getObjectById(creep.memory.target)) === 1)
-		                {
-		                    if(creep.carry.energy < creep.carryCapacity)
-		                    {
-		                        creep.memory.action = "collect";
-		                        creep.memory.pathCache = 'undefined';
-		                    }
-		                    else
-		                    {
-		                        creep.memory.action = "unload";
-		                        creep.memory.pathCache = 'undefined';
-		                    }
-		                }
-		                break;
-		            case 'collect':
-		                if(creep.carry.energy < creep.carryCapacity)
-		                {
-		                    //console.log("harvesting from "+creep.memory.target.id);
-		                    //console.log("harvest result: "+
-	                        var hr = creep.harvest(Game.getObjectById(creep.memory.target))
-		                    if(hr !== 0)
-	                        {
-	                            console.log("Error trying to harvest: "+ hr);
-	                        }
-		                    //);
-		                }
-		                else
-		                {
-		                	if(creep.memory.haulSquad.length === 0)
-		                	{
-	                            creep.memory.action = "move";
-	                            creep.memory.target = creep.pos.findClosestByRange(creep.room.find(FIND_MY_SPAWNS)).id;
-		                	}
-		                	else
-		                	{
-		                		
-		                	}
-	                        if(Memory.creepCount[Room.name]["truck"] === 0)
-	                        {
-	                            
-	                            creep.memory.action = "move";
-	                            creep.memory.target = creep.pos.findClosestByRange(creep.room.find(FIND_MY_SPAWNS)).id;
-	                            //creep.memory.target = creep.room.find(FIND_MY_SPAWNS)[0].id;
-	                        }
-	                        else
-	                        {
-	                            creep.memory.action = "unload";
-	                            /*var c = creep.room.find(FIND_MY_CREEPS, {filter: function(e) {if(e.memory.role === "truck"){return true;}else{return false;}}});
-	                            console.log("c: "+c);
-	                            var cc = creep.pos.findClosestByRange(c).id;
-	                            console.log("cc: "+cc);*/
-	                            creep.memory.target = creep.pos.findClosestByRange(creep.room.find(FIND_MY_CREEPS, {
-	                                memory: {role: 'truck'}
-	                                })).id;
-	                               
-	                        }
-		                }
-		                break;
-		            case 'unload':
-	                    if(Memory.creepCount[Room.name]["truck"] === 0)
+		        	if(creep.pos.getRangeTo(Game.getObjectById(creep.memory.target)) === 1)
+	                {
+	                    if(creep.carry.energy < creep.carryCapacity)
 	                    {
-	                        if(creep.carry.energy > 0)
-	                        {
-	                            var target = Game.getObjectById(creep.memory.target);
-	                            var deficit = target.energyCapacity - target.energy;
-	                            //console.log(
-	                            creep.transferEnergy(target, (deficit > creep.carry.energy) ? creep.carry.energy: deficit);
-	                            //);
-	                        }
-	                        else
-	                        {
-	                            creep.memory.action = "move";
-	                            creep.memory.target = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE).id;
-	                        }
+	                        creep.memory.action = "collect";
+	                        creep.memory.pathCache = 'undefined';
 	                    }
 	                    else
 	                    {
-	                        if(creep.carry.energy > 0)
-	                        {
-	                            var target = Game.getObjectById(creep.memory.target);
-	                            var deficit = target.energyCapacity - target.energy;
-	                            if(creep.pos.getRangeTo(Game.getObjectById(creep.memory.target) === 1))
-	                            {
-	                                creep.transferEnergy(target, (deficit > creep.carry.energy) ? creep.carry.energy: deficit);
-	                            }
-	                            creep.memory.action = "collect";
-	                        }
+	                        creep.memory.action = "unload";
+	                        creep.memory.pathCache = 'undefined';
 	                    }
-		                /*else
-		                {
-		                    creep.memory.action = "move";
-		                    creep.memory.target = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE).id;
-						}*/
-		                break;
-		            case 'idle':
-		                //console.log("case idle");
-		                //console.log("target typeof:"+ creep.memory.target.id);
-		                switch(Game.getObjectById(creep.memory.target).structureType)
-						{
-	            	        case 'source':
-	            	            creep.memory.action = "collect";
-	            	            break;
-	            	        case 'spawn':
-	        	                creep.transferEnergy(Game.getObjectById(creep.memory.target));
-	        	                creep.memory.target = creep.room.find(FIND_SOURCES)[0].id;
-	        	                creep.memory.action = "move";
-	            	            break;
-	            	        default:
-	            	            console.log("error 1:"+creep.name+" idle, but can't determine next action");
-	            	            break;
-	            	    }
-		                break;
-		            default:
-		                creep.memory.action = "move";
-		                break;
+	                }
+		        }
+		        if(creep.memory.action === 'collect')
+		        {
+		        	if(creep.carry.energy < creep.carryCapacity)
+	                {
+                        var hr = creep.harvest(Game.getObjectById(creep.memory.target))
+	                    if(hr !== 0)
+                        {
+                            console.log("Error trying to harvest: "+ hr);
+                            creep.say("ERROR:"+hr);
+                        }
+	                }
+	                
+                	if(creep.memory.haulSquad.length === 0)
+                	{
+                		if(creep.carry.energy >= creep.carryCapacity)
+                		{
+                            creep.memory.action = "move";
+                            creep.memory.target = creep.pos.findClosestByRange(creep.room.find(FIND_MY_SPAWNS)).id;
+                		}
+                	}
+                	else
+                	{
+                		var nearCreeps = creep.room.lookForAtArea('creep',creep.pos.y+1,creep.pos.x+1,creep.pos.y-1,creep.pos.x-1)
+                		if(nearCreeps)
+                		{
+                			var nearest = creep.pos.findClosestByRange(nearCreeps, {
+                				filter: {role:"truck",squadLeader:creep.id}
+                				});
+                			//if(nearest.pos.getRangeTo(creep) === 1){
+    		                    var deficit = nearest.energyCapacity - nearest.energy;
+                				creep.transferEnergy(nearest, (deficit > creep.carry.energy) ? creep.carry.energy: deficit);
+                			//}
+                		}
+                	}
+		        }
+		        if(creep.memory.action === 'unload')
+		        {
+		        	if(creep.memory.haulSquad.length === 0)
+                    {
+                        if(creep.carry.energy > 0)
+                        {
+                            var target = Game.getObjectById(creep.memory.target);
+                            var deficit = target.energyCapacity - target.energy;
+                            //console.log(
+                            creep.transferEnergy(target, (deficit > creep.carry.energy) ? creep.carry.energy: deficit);
+                            //);
+                        }
+                        else
+                        {
+                            creep.memory.action = "move";
+                            creep.memory.target = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE).id;
+                        }
+                    }
+                    else
+                    {
+
+                        var Utarget = Game.getObjectbyId(this.getNearestTruckId(creep, creep.haulSquad)); //Unload Target
+                        
+                        if(creep.pos.getRangeTo(Utarget === 1))
+                        {
+                        	var deficit = Utarget.energyCapacity - Utarget.carry.energy;
+                            creep.transferEnergy(Utarget, (deficit > creep.carry.energy) ? creep.carry.energy: deficit);
+                        }
+                        if(creep.carry.energy < creep.energyCapacity)
+                        	creep.memory.action = "collect";
+                    }
 		        }
 	            break;
 	        default:
