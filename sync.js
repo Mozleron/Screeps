@@ -34,7 +34,7 @@ var clientSide = function() {
 					commitButton.disabled = false;
 					commitButton.click();
 				}
-				setTimeout(update.bind(this, false), req.status === 200 ? 0 : 1000);
+				setTimeout(update.bind(this, false), req.status === 200 ? 0 : 500);
 			}
 		};
 		req.open('GET', 'https://localhost:9090/'+ (now ? 'get' : 'wait'), true);

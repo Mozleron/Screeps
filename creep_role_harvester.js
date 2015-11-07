@@ -64,13 +64,7 @@
 	            	creep.memory.action = "move";
 	            	creep.say("Moving to: "+creep.memory.target);
 	        	}
-	        	/*else
-	        	{
-	        	    console.log(creep.name+", target:"+(typeof creep.memory.target));
-	        	    console.log(creep.name+", pos:"+creep.pos+", range to target: "+creep.pos.getRangeTo(creep.memory.target.pos.x,creep.memory.target.pos.y) );
-	        	    console.log(creep.name+", action: "+creep.memory.action);
-	        	    
-	        	}*/
+		        
 		        switch(creep.memory.action)
 		        {
 		            case 'move':

@@ -4,6 +4,8 @@
 
 var CreepSpawner = require('creep_spawner');
 var CreepRole = require('creep_role')();
+var SourceMemory = require("SourceMemory");
+
 module.exports.loop = function () 
 {
     if(!Memory.init)
@@ -42,15 +44,6 @@ module.exports.loop = function ()
 		{
 			routeCreep(creep, creep.memory.target);
 		}
-	    //creep.memory.testFullPath = creep.pos.findPathTo(Game.getObjectById(creep.memory.target).pos);
-	    //creep.memory.testSerialPath = Room.serializePath(creep.memory.testFullPath);
-	    //console.log(creep.memory.testSerialPath);
-		
-
-
-	    //console.log(creep.pos.findPathTo(Game.getObjectById(creep.memory.target).pos));
-	    //console.log(Room.serializePath(creep.room.findPath(creep.pos, Game.getObjectById(creep.memory.target))));
-
 	}
 	/*for(var i in Game.rooms)
 	{
@@ -102,7 +95,6 @@ function selfRouteCreep(creep,destId)
 		creep.memory.pathCache = creep.pos.findPathTo(dest,{ignoreCreeps:false,maxOps:500,heuristicWeight:2,serialize:true});
 		console.log("creep.memory.pathCache: "+creep.memory.pathCache);
 	}
-	//var currentPos = creep.pos;
 	creep.moveByPath(creep.memory.pathCache);
 	if(creep.memory.lastPos === creep.pos)
 	{
@@ -220,9 +212,10 @@ function routeCreep(creep,destId)
 
 function initialize()
 {	
-	for(var i in Game.rooms)
+	while(i=Game.rooms.shift())
 	{
-		Game.rooms[i].typename="home";
+		Memory.rooms[i.name].typename="home";
+		//i.memory.typename="home";
 	}
     //check for creepCount
     if(typeof Memory.creepCount === 'undefined')
@@ -238,14 +231,18 @@ function initialize()
     {
     	Memory.spawnQueue = [];
     }
-    //Memory.spawnQueue.push('harvester');
-    //create a harvester
-    //59 Game.spawns.Spawn1.createCreep([WORK, CARRY, CARRY, MOVE], null, {role: 'harvester',task: 'harvest'});
-    //74 Game.spawns.Spawn1.createCreep([WORK, WORK, CARRY, MOVE], null, {role: 'harvester',task: 'harvest'});
-    //Game.spawns.Spawn1.createCreep([WORK, CARRY, MOVE, MOVE], null, {role: 'harvester',task: 'harvest'});
-    //Game.spawns.Spawn1.createCreep([WORK, WORK, CARRY, MOVE], null, {role: 'tractor',task: 'harvest'});
-    //Memory.creepCount[Room.name]['tractor'] = 1;
-    //Memory.creepCount[Room.name]['truck'] = 0;
+    if(typeof Memory.sourceList === 'undefined')
+    {
+    	Memory.sourceList = {};
+    	Memory.sourceList[Room.name] = {};
+    	var sources = Room.find(FIND_SOURCES);
+    	while(i=sources.shift())
+    	{
+    		i.memory.squadLeader = "undefined";
+    		if(Room.lookForAtArea(keeperLair, i.pos.y-3,i.pos.x+3,i.pos.y+3,i.pos.x-3 ))
+    		{i.memory.lair = true;}else{i.memory.lair=false;}
+    	}
+    }
     Memory.init = true;
     return;
 }
