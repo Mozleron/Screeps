@@ -5,6 +5,7 @@
 var CreepSpawner = require('creep_spawner');
 var CreepRole = require('creep_role')();
 var SourceMemory = require("SourceMemory");
+var RoomMemory = require("RoomMemory");
 
 module.exports.loop = function () 
 {
@@ -45,16 +46,18 @@ module.exports.loop = function ()
 			routeCreep(creep, creep.memory.target);
 		}
 	}
-	/*for(var i in Game.rooms)
+
+	for(var i in Game.rooms)
 	{
 		var room = Room.name;// Game.rooms[i];
 		console.log("Examining room: "+room);
 		
-	}*/
+	}
+
 	for(var i in Game.spawns)
 	{
 		var spawn = Game.spawns[i];
-		
+	
 		if(spawn.spawning === null)
 		{
 			if(Memory.spawnQueue.length > 0)
@@ -77,6 +80,10 @@ module.exports.loop = function ()
 			{
 				console.log("    - Spawn has "+spawn.energy+"/"+spawn.energyCapacity+" and nothing in queue");
 			}
+		}
+		else
+		{
+			console.log("	- Spawn has "+i.remainingTime+" turns until complete")
 		}
 	}
 }
@@ -211,13 +218,54 @@ function routeCreep(creep,destId)
 }
 
 function initialize()
-{	
-	while(i=Game.rooms.shift())
+{
+	Memory.init = true;
+	console.log("initializing source list");
+	try
 	{
-		Memory.rooms[i.name].typename="home";
-		//i.memory.typename="home";
+	console.log("Game.rooms: "+Game.rooms);
+	
+	/*
+	 * Check for Game.rooms.sim, if true, send that to a function, otherwise, for through all rooms and send each one to a function to initialize.
+	 */
+    if(/*typeof Game.rooms[0] != 'undefined' ||*/ typeof Game.rooms != 'undefined')
+    {
+    	console.log("Stringified Game: " +JSON.stringify(Game, null, 4));
+    	if(typeof Memory.sourceList === 'undefined')
+        {
+        	Memory.sourceList = {};
+        	Memory.sourceList[Game.rooms.name] = {};
+        	console.log("Finding Sources!")
+        	var sources = Game.structures[0].room.find(FIND_SOURCES);
+        	for(var i in sources)
+        	{
+        		console.log("Source id i: "+sources[i]);
+        		sources[i].memory.squadLeader = "undefined";
+        		if(Room.lookForAtArea(keeperLair, sources[i].pos.y-3,sources[i].pos.x+3,sources[i].pos.y+3,sources[i].pos.x-3 ))
+        		{sources[i].memory.lair = true;}else{sources[i].memory.lair=false;}
+        	}
+        }
+    }
+    else
+    {
+    	console.log("Game.rooms[0] === undefined, failing initialization");
+    	Memory.init = false;
+    }
 	}
+	catch(e)
+	{
+		console.log(e);
+		Memory.init = false;
+	}
+	console.log("initializing rooms array");
+	if(typeof Memory.rooms[0] === 'undefined')
+	{
+		Memory.rooms[Room.name] = {};
+		Memory.rooms[Room.name].typename="home"
+	}
+	
     //check for creepCount
+	console.log("initializing creepCount");
     if(typeof Memory.creepCount === 'undefined')
     {
     	Memory.creepCount = {};
@@ -231,11 +279,14 @@ function initialize()
     {
     	Memory.spawnQueue = [];
     }
+    
+
+    /*console.log("initializing source list");
     if(typeof Memory.sourceList === 'undefined')
     {
     	Memory.sourceList = {};
     	Memory.sourceList[Room.name] = {};
-    	var sources = Room.find(FIND_SOURCES);
+    	var sources = Game.spawns[0].room.find(FIND_SOURCES);
     	while(i=sources.shift())
     	{
     		i.memory.squadLeader = "undefined";
@@ -243,6 +294,14 @@ function initialize()
     		{i.memory.lair = true;}else{i.memory.lair=false;}
     	}
     }
-    Memory.init = true;
+    
+    console.log("initializing roomList");
+    if(typeof Memory.roomList === 'undefined')
+    {
+    	Memory.roomList = {};
+    	Memory.roomList[Room.name]={};
+    }*/
+    
+    console.log("initialize done, returning "+Memory.init);
     return;
 }
