@@ -9,8 +9,30 @@
 console.log("Creating source memory...");
     
 //Create memory for energy sources.
-if(typeof Memory.sources === 'undefined')
-	Memory.sources = { };
+//if(typeof Memory.sources === 'undefined')
+//	Memory.sources = { };
     
 
-Source.prototype.memory = Memory.sources[this.id];
+//Source.prototype.memory = Memory.sources[this.id];
+
+//http://stackoverflow.com/questions/30147800/extend-source-prototype-to-have-a-memory-object
+Object.defineProperty(Source.prototype, 'memory', {
+    get: function() {
+        if(_.isUndefined(Memory.sources)) {
+            Memory.sources = {};
+        }
+        if(!_.isObject(Memory.sources)) {
+            return undefined;
+        }
+        return Memory.sources[this.id] = Memory.sources[this.id] || {};
+    },
+    set: function(value) {
+        if(_.isUndefined(Memory.sources)) {
+            Memory.sources = {};
+        }
+        if(!_.isObject(Memory.sources)) {
+            throw new Error('Could not set source memory');
+        }
+        Memory.sources[this.id] = value;
+    }
+});

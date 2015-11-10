@@ -88,6 +88,123 @@ module.exports.loop = function ()
 	}
 }
 
+function initRoom(room)
+{
+	if(typeof Memory.sources[room.name] === 'undefined')
+	{
+		Memory.sources[room.name] = {};
+	}
+	console.log("Finding Sources for room "+room.name+"!")
+	var sources = room.find(FIND_SOURCES);
+	for(var i in sources)
+	{
+		console.log("Source "+i+": "+JSON.stringify(sources[i],null, 4));
+		sources[i].memory.squadLeader = 'undefined';
+		console.log("Room sources: "+JSON.stringify(sources[i].room.lookAtArea(sources[i].pos.y-3,sources[i].pos.x-3,sources[i].pos.y+3,sources[i].pos.x+3),null,4));
+		if(Room.lookForAtArea(structure, sources[i].room.lookAtArea(sources[i].pos.y-3,sources[i].pos.x-3,sources[i].pos.y+3,sources[i].pos.x+3)))
+		{sources[i].memory.lair = true;}else{sources[i].memory.lair=false;}
+	}
+}
+
+function initialize()
+{
+	Memory.init = true;
+	console.log("initializing source list");
+	try
+	{
+	console.log("Game.rooms: "+Game.rooms);
+	
+	/*
+	 * Check for Game.rooms.sim, if true, send that to a function, otherwise, for through all rooms and send each one to a function to initialize.
+	 */
+
+	
+    if(/*typeof Game.rooms[0] != 'undefined' ||*/ typeof Game.rooms != 'undefined')
+    {
+    	//console.log("Stringified Game: " +JSON.stringify(Game, null, 4));
+    	if(typeof Memory.sources === 'undefined')
+        {
+    		console.log("Memory.sources was undefined");
+        	Memory.sources = {};
+        }
+    	else
+    	{
+    		console.log("Memory.sources: "+JSON.stringify(Memory.sources, null, 4));
+    	}
+    	//if(Room.mode === "simulation")
+    	//{
+    	//	console.log("Room.mode = simulation");
+    	//	initRoom(Room.sim);
+    	//}
+    	//else
+    	//{
+    	//	console.log("Room.mode != simulation, it actually equals "+Room.mode);
+    		for(var i in Game.rooms)
+    			console.log("Game.rooms: "+JSON.stringify(Game.rooms,null,4));
+    			initRoom(Game.rooms[i]);
+    	//}
+    }
+    else
+    {
+    	console.log("Game.rooms === undefined, failing initialization");
+    	Memory.init = false;
+    }
+	}
+	catch(e)
+	{
+		console.log("Failure during room initialization routine");
+		console.log(e);
+		Memory.init = false;
+	}
+	console.log("initializing rooms array");
+	if(typeof Memory.rooms[0] === 'undefined')
+	{
+		Memory.rooms[Room.name] = {};
+		Memory.rooms[Room.name].typename="home"
+	}
+	
+    //check for creepCount
+	console.log("initializing creepCount");
+    if(typeof Memory.creepCount === 'undefined')
+    {
+    	Memory.creepCount = {};
+        Memory.creepCount[Room.name] = {};
+        Memory.creepCount[Room.name]['assault'] = 0;
+        Memory.creepCount[Room.name]['harvester'] = 0;
+        Memory.creepCount[Room.name]['tractor'] = 0;
+        Memory.creepCount[Room.name]['truck'] = 0;
+    }
+    if(typeof Memory.spawnQueue === 'undefined')
+    {
+    	Memory.spawnQueue = [];
+    }
+    
+
+    /*console.log("initializing source list");
+    if(typeof Memory.sourceList === 'undefined')
+    {
+    	Memory.sourceList = {};
+    	Memory.sourceList[Room.name] = {};
+    	var sources = Game.spawns[0].room.find(FIND_SOURCES);
+    	while(i=sources.shift())
+    	{
+    		i.memory.squadLeader = "undefined";
+    		if(Room.lookForAtArea(keeperLair, i.pos.y-3,i.pos.x+3,i.pos.y+3,i.pos.x-3 ))
+    		{i.memory.lair = true;}else{i.memory.lair=false;}
+    	}
+    }
+    
+    console.log("initializing roomList");
+    if(typeof Memory.roomList === 'undefined')
+    {
+    	Memory.roomList = {};
+    	Memory.roomList[Room.name]={};
+    }*/
+    
+    console.log("initialize done, returning "+Memory.init);
+    return;
+}
+
 function selfRouteCreep(creep,destId)
 {
 	if(creep.fatigue>0)
@@ -217,91 +334,3 @@ function routeCreep(creep,destId)
     return error;
 }
 
-function initialize()
-{
-	Memory.init = true;
-	console.log("initializing source list");
-	try
-	{
-	console.log("Game.rooms: "+Game.rooms);
-	
-	/*
-	 * Check for Game.rooms.sim, if true, send that to a function, otherwise, for through all rooms and send each one to a function to initialize.
-	 */
-    if(/*typeof Game.rooms[0] != 'undefined' ||*/ typeof Game.rooms != 'undefined')
-    {
-    	console.log("Stringified Game: " +JSON.stringify(Game, null, 4));
-    	if(typeof Memory.sourceList === 'undefined')
-        {
-        	Memory.sourceList = {};
-        	Memory.sourceList[Game.rooms.name] = {};
-        	console.log("Finding Sources!")
-        	var sources = Game.structures[0].room.find(FIND_SOURCES);
-        	for(var i in sources)
-        	{
-        		console.log("Source id i: "+sources[i]);
-        		sources[i].memory.squadLeader = "undefined";
-        		if(Room.lookForAtArea(keeperLair, sources[i].pos.y-3,sources[i].pos.x+3,sources[i].pos.y+3,sources[i].pos.x-3 ))
-        		{sources[i].memory.lair = true;}else{sources[i].memory.lair=false;}
-        	}
-        }
-    }
-    else
-    {
-    	console.log("Game.rooms[0] === undefined, failing initialization");
-    	Memory.init = false;
-    }
-	}
-	catch(e)
-	{
-		console.log(e);
-		Memory.init = false;
-	}
-	console.log("initializing rooms array");
-	if(typeof Memory.rooms[0] === 'undefined')
-	{
-		Memory.rooms[Room.name] = {};
-		Memory.rooms[Room.name].typename="home"
-	}
-	
-    //check for creepCount
-	console.log("initializing creepCount");
-    if(typeof Memory.creepCount === 'undefined')
-    {
-    	Memory.creepCount = {};
-        Memory.creepCount[Room.name] = {};
-        Memory.creepCount[Room.name]['assault'] = 0;
-        Memory.creepCount[Room.name]['harvester'] = 0;
-        Memory.creepCount[Room.name]['tractor'] = 0;
-        Memory.creepCount[Room.name]['truck'] = 0;
-    }
-    if(typeof Memory.spawnQueue === 'undefined')
-    {
-    	Memory.spawnQueue = [];
-    }
-    
-
-    /*console.log("initializing source list");
-    if(typeof Memory.sourceList === 'undefined')
-    {
-    	Memory.sourceList = {};
-    	Memory.sourceList[Room.name] = {};
-    	var sources = Game.spawns[0].room.find(FIND_SOURCES);
-    	while(i=sources.shift())
-    	{
-    		i.memory.squadLeader = "undefined";
-    		if(Room.lookForAtArea(keeperLair, i.pos.y-3,i.pos.x+3,i.pos.y+3,i.pos.x-3 ))
-    		{i.memory.lair = true;}else{i.memory.lair=false;}
-    	}
-    }
-    
-    console.log("initializing roomList");
-    if(typeof Memory.roomList === 'undefined')
-    {
-    	Memory.roomList = {};
-    	Memory.roomList[Room.name]={};
-    }*/
-    
-    console.log("initialize done, returning "+Memory.init);
-    return;
-}
