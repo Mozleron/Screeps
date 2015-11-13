@@ -95,14 +95,27 @@ function initRoom(room)
 		Memory.sources[room.name] = {};
 	}
 	console.log("Finding Sources for room "+room.name+"!")
-	var sources = room.find(FIND_SOURCES);
-	for(var i in sources)
+	var sourceList = room.find(FIND_SOURCES);
+	console.log("sources: "+JSON.stringify(sourceList,null,4));
+	for(var i in sourceList)
 	{
-		console.log("Source "+i+": "+JSON.stringify(sources[i],null, 4));
-		sources[i].memory.squadLeader = 'undefined';
-		console.log("Room sources: "+JSON.stringify(sources[i].room.lookAtArea(sources[i].pos.y-3,sources[i].pos.x-3,sources[i].pos.y+3,sources[i].pos.x+3),null,4));
-		if(Room.lookForAtArea(FIND_STRUCTURES, sources[i].room.lookAtArea(sources[i].pos.y-3,sources[i].pos.x-3,sources[i].pos.y+3,sources[i].pos.x+3)))
-		{sources[i].memory.lair = true;}else{sources[i].memory.lair=false;}
+		//console.log("Source "+i+": "+JSON.stringify(sources[Room.name][i],null, 4));
+		//sources[room.name][i].squadLeader = {};
+		if(typeof Memory.sources[room.name][sourceList[i].id] === 'undefined')
+		{
+			Memory.sources[room.name][sourceList[i].id] = {};
+		}
+		Memory.sources[room.name][sourceList[i].id].squadLeader ='undefined';
+		var top = sourceList[i].pos.y-3 < 0?0:sourceList[i].pos.y-3;
+		var left = sourceList[i].pos.x-3 < 0?0:sourceList[i].pos.x-3;
+		var bottom = sourceList[i].pos.y+3 > 49?49:sourceList[i].pos.y+3;
+		var right = sourceList[i].pos.x+3 > 49?49:sourceList[i].pos.x+3;
+		//console.log("Room source "+sourceList[i].id+" surrounding area: "+JSON.stringify(sourceList[i].room.lookAtArea(top,left,bottom,right),null,4));
+		var keepers = sourceList[i].room.lookForAtArea("keeperLair", top,left,bottom,right)
+		console.log("keepers: "+JSON.stringify(keepers));
+		//console.log("source keeper lair search results: "+JSON.stringify(keepers),null,4);
+		//if(sources[room.name][sources[i].id].room.lookForAtArea(STRUCTURE_KEEPER_LAIR, top,left,bottom,right))
+		//{sources[room.name][sources[i].id].memory.lair = true;}else{sources[room.name][sources[i].id].memory.lair=false;}
 	}
 }
 
@@ -112,7 +125,6 @@ function initialize()
 	console.log("initializing source list");
 	//try
 	//{
-	console.log("Game.rooms: "+Game.rooms);
 	
 	/*
 	 * Check for Game.rooms.sim, if true, send that to a function, otherwise, for through all rooms and send each one to a function to initialize.
@@ -126,6 +138,8 @@ function initialize()
         {
     		console.log("Memory.sources was undefined");
         	Memory.sources = {};
+        	for(var i in Game.rooms)
+        		Memory.sources[Game.rooms[i].name] = {};
         }
     	else
     	{
@@ -140,8 +154,10 @@ function initialize()
     	//{
     	//	console.log("Room.mode != simulation, it actually equals "+Room.mode);
     		for(var i in Game.rooms)
+    		{
     			console.log("Game.rooms: "+JSON.stringify(Game.rooms,null,4));
     			initRoom(Game.rooms[i]);
+    		}
     	//}
     }
     else

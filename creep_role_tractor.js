@@ -77,7 +77,7 @@
 	                {
 	                	var target = creep.pos.findClosestByRange(sources)
 	                	creep.target = target.id;		                
-	                	target.squadLeader = creep.target;
+	                	target.squadLeader = creep.id;
 		                creep.memory.action = "move";
 	                }
 	                else
