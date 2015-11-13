@@ -97,6 +97,38 @@ module.exports = function() {
         Source.room.memory.sources[id].miners = newminers;
     }
 
+    creep_role.getNearestEnergyStoreId = function(creep){
+    	return creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+			filter: function(o){
+				return o.store.energy > -1;
+			}
+		}).id;
+    }
+    
+    creep_role.getNearestEmptyEnergyStoreId = function(creep){
+    	return creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+			filter: function(o){
+				return o.store.energy === 0;
+			}
+		}).id;
+    }
+    
+    creep_role.getNearestNonEmptyEnergyStoreId = function(creep){
+    	return creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+			filter: function(o){
+				return o.store.energy > 0;
+			}
+		}).id;
+    }
+    
+    creep_role.getNearestFullEnergyStoreId = function(creep){
+    	return creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+			filter: function(o){
+				return o.store.energy === o.storeCapacity;
+			}
+		}).id;
+    }
+    
     Creep.prototype.performRole = function(CreepRole) {
     	CreepRole.getRole(this.memory.role).performRole(CreepRole, this);
     }

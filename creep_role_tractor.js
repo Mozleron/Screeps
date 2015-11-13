@@ -60,14 +60,41 @@
 	 
 	 tractor.performRole = function(CreepRole, creep)
 	 {
+		if(creep.memory.haulSquad.length === 0)
+		{
+			Memory.spawnQueue.push("truck");
+		}
+		
 		switch(creep.memory.task)
 		{
 		    case 'harvest':
 		        if(typeof creep.memory.target === "undefined" || creep.memory.target === "undefined" )
 		        {
-	                var sources = creep.room.find(FIND_SOURCES);
-	                creep.memory.target = sources[0].id;
-	                creep.memory.action = "move";
+	                var sources = creep.room.find(FIND_SOURCES, {
+	                	filter: {squadLeader:'undefined',lair:false}
+	                });
+	                if(sources.length > 0)
+	                {
+	                	var target = creep.pos.findClosestByRange(sources)
+	                	creep.target = target.id;		                
+	                	target.squadLeader = creep.target;
+		                creep.memory.action = "move";
+	                }
+	                else
+	                {
+	                	console.log(creep.name +" thinks all sources are accounted for!");
+	                	console.log(creep.name +" switching to upgrade gcl!");
+	                	var sources = creep.room.find(FIND_MY_STRUCTURES, {
+	                		filter: {structureType:STRUCTURE_CONTROLLER}
+	                	});
+	                	if(sources.length>0)
+	                	{
+	                		console.log(creep.name + " going to update controller id "+sources[0].id);
+	                		creep.memory.task = "upgrade";
+	                		creep.memory.action = "collect";
+	                		creep.memory.target = sources[0].id;
+	                	}
+	                }
 	            }
 		        if(creep.memory.action === 'move')
 		        {
@@ -153,6 +180,92 @@
                     }
 		        }
 	            break;
+		    case 'upgrade':
+		    	if(typeof memory.target === "undefined" || creep.memory.target === "undefined")
+		    	{
+		    		var targets = creep.room.find(FIND_MY_STRUCTURES, {
+                		filter: {structureType:STRUCTURE_CONTROLLER}
+                	});
+		    		if(targets.length > 0)
+	                {
+	                	var target = creep.pos.findClosestByRange(targets)
+	                	creep.target = target.id;		                
+	                	//target.squadLeader = creep.target;
+		                creep.memory.action = "move";
+	                }
+		    	}
+		    	if(creep.memory.action === 'move')
+		        {
+		        	if(creep.pos.getRangeTo(Game.getObjectById(creep.memory.target)) === 1)
+	                {
+	                    if(creep.carry.energy < creep.carryCapacity)
+	                    {
+	                        creep.memory.action = "collect";
+	                        creep.memory.pathCache = 'undefined';
+	                    }
+	                    else
+	                    {
+	                        creep.memory.action = "work";
+	                        creep.memory.pathCache = 'undefined';
+	                    }
+	                }
+		        }
+		    	if(creep.memory.action === 'work')
+		    	{
+		    		if(creep.carry.energy > 0)
+		    		{
+		    			creep.upgradeController(creep.target);
+		    		}
+		    		else
+		    		{
+		    			creep.say("out of energy!");
+		    			if(creep.memory.haulSquad.length === 0)
+		    			{
+		    				creep.target = CreepRole.getNearestNonEmptyEnergyStoreId(creep);
+
+		    				creep.memory.action = "move";
+		    			}
+		    			else
+		    			{
+		    				var nearestTruck = creep.pos.findClosestByRange(FIND_MY_CREEPS, {
+		    					filter: {squadLeader: creep.id}
+		    				});
+		    				if(creep.pos.inRangeTo(nearestTruck, 1))
+		    				{
+		    					var deficit = creep.carryCapacity - creep.carry.energy;
+		    					nearestTruck.transferEnergy(creep, deficit > nearestTruck.carry.energy?nearestTruck.carry.energy:deficit);
+		    				}
+		    			}
+		    		}
+		    	}
+		    	if(creep.memory.action === 'collect')
+		    	{
+		    		if(creep.carry.energy < creep.carryCapacity)
+		    		{
+		    			var deficit = creep.carryCapacity - creep.carry.energy;
+		    			var structure = getObjectById(creep.memory.target);
+		    			if(structure.store > deficit)
+		    			{
+		    				structure.transferEnergy(creep, deficit);
+		    				creep.memory.target = creep.room.find(FIND_MY_STRUCTURES, {
+		                		filter: {structureType:STRUCTURE_CONTROLLER}
+		                	});
+		    			}
+		    			else
+		    			{
+		    				structure.transferEnergy(creep);
+		    				creep.memory.target = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+		    					filter: function(o){
+		    						return o.energy > 0;
+		    					}
+		    				});
+		    			}
+
+	    				creep.memory.action = "move";
+		    			structure.transferEnergy(creep, structure.store > deficit?deficit:structure.store );
+		    		}
+		    	}
+		    	break;
 	        default:
 	            console.log(creep.name+" error: no known task assigned");
 	            break;

@@ -27,7 +27,7 @@ module.exports.loop = function ()
     {
     	Memory.spawnQueue.push("harvester");
     	Memory.spawnQueue.push("tractor");
-    	Memory.spawnQueue.push("truck");
+    	//Memory.spawnQueue.push("truck");
     }
 	for(var name in Game.creeps) 
     {
@@ -101,7 +101,7 @@ function initRoom(room)
 		console.log("Source "+i+": "+JSON.stringify(sources[i],null, 4));
 		sources[i].memory.squadLeader = 'undefined';
 		console.log("Room sources: "+JSON.stringify(sources[i].room.lookAtArea(sources[i].pos.y-3,sources[i].pos.x-3,sources[i].pos.y+3,sources[i].pos.x+3),null,4));
-		if(Room.lookForAtArea(structure, sources[i].room.lookAtArea(sources[i].pos.y-3,sources[i].pos.x-3,sources[i].pos.y+3,sources[i].pos.x+3)))
+		if(Room.lookForAtArea(FIND_STRUCTURES, sources[i].room.lookAtArea(sources[i].pos.y-3,sources[i].pos.x-3,sources[i].pos.y+3,sources[i].pos.x+3)))
 		{sources[i].memory.lair = true;}else{sources[i].memory.lair=false;}
 	}
 }
@@ -110,8 +110,8 @@ function initialize()
 {
 	Memory.init = true;
 	console.log("initializing source list");
-	try
-	{
+	//try
+	//{
 	console.log("Game.rooms: "+Game.rooms);
 	
 	/*
@@ -149,13 +149,13 @@ function initialize()
     	console.log("Game.rooms === undefined, failing initialization");
     	Memory.init = false;
     }
-	}
+	/*}
 	catch(e)
 	{
 		console.log("Failure during room initialization routine");
 		console.log(e);
 		Memory.init = false;
-	}
+	}*/
 	console.log("initializing rooms array");
 	if(typeof Memory.rooms[0] === 'undefined')
 	{
