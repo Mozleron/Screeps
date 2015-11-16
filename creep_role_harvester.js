@@ -25,9 +25,14 @@
 	    return this.parts[count]
 	 },
 	
-	harvester.getParts = function() 
+	harvester.getParts = function(eCap) 
 	{
-	    return this.getPartsForExtensionCount(0)
+		for(var i in this.costs)
+		{
+			if(eCap > this.costs[i])
+				continue;
+			return this.getPartsForExtensionCount(i);
+		}
 	},
 	
 	harvester.getMemories = function()
@@ -42,9 +47,29 @@
 	
 	harvester.getCost = function() 
 	{
-	    return this.getCostForExtensionCount(0)
+		//console.log("harvester.getCost()");
+	    return this.getCost(300);
 	},
-	 
+	 harvester.getCost = function(eCap)
+	 {
+		//console.log("harvester.getCost("+eCap+")");
+		//console.log("this.costs: "+JSON.stringify(this.costs));
+		 for(var i in this.costs)
+		 {
+			 //console.log("this.costs[i]: "+this.costs[i]);
+			 if(eCap >= this.costs[i])
+				 continue;
+			 if(i === 0)
+			 {	 //console.log("returning 0");
+				 return 0;}
+			 else
+			 {	 //console.log("returning this.costs[i-1]: "+this.costs[i-1]+"; i="+i);
+				 return this.costs[i-1];}
+		 }
+		 //console.log("made it to the end, returning this.costs[this.costs.length-1]: "+this.costs[this.costs.length-1]);
+		 return this.costs[this.costs.length-1];
+		 //return this.getCostForExtensionCount(0);
+	 },
 	 harvester.performRole = function(CreepRole, creep)
 	 {
 		switch(creep.memory.task)

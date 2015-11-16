@@ -26,11 +26,19 @@
 		 console.log("Parts By Extension: "+this.parts[count]);
 		 return this.parts[count];
 	 },
-	 
-	 truck.getParts = function()
+	 truck.getParts = function(eCap)
+	 {
+		for(var i in this.costs)
+		{
+			if(eCap >= this.costs[i])
+				continue;
+			return this.getPartsForExtensionCount(i);
+		}
+	 },
+	 /*truck.getParts = function()
 	 {
 		 return this.getPartsForExtensionCount(0);
-	 },
+	 },*/
 	 truck.getMemories = function()
 	 {
 		 return this.memories;
@@ -39,10 +47,23 @@
 	 {
 		 return this.costs[count];
 	 },
-	 
 	 truck.getCost = function()
 	 {
-		 return this.getCostForExtensionCount(0);
+		 return this.getCost(300);
+	 },
+	 truck.getCost = function(eCap)
+	 {
+		 for(var i in this.costs)
+		 {
+			 if(eCap > this.costs[i])
+				 continue;
+			 if(i === 0)
+				 return 0;
+			 else
+				 return this.costs[i-1];
+		 }
+		 return this.costs[this.costs.length-1];
+		 //return this.getCostForExtensionCount(0);
 	 },
 	 
 	 truck.performRole = function(CreepRole, creep)

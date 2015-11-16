@@ -4,8 +4,8 @@
 
 var CreepSpawner = require('creep_spawner');
 var CreepRole = require('creep_role')();
-var SourceMemory = require("SourceMemory");
-var RoomMemory = require("RoomMemory");
+//var SourceMemory = require("SourceMemory");
+//var RoomMemory = require("RoomMemory");
 
 function initRoom(room)
 {
@@ -61,7 +61,8 @@ function initialize()
     {
     	Memory.spawnQueue = [];
     }
-    
+    Memory.spawnQueue.push("harvester");
+	Memory.spawnQueue.push("tractor");
     console.log("initialize done, returning "+Memory.init);
     return;
 }
@@ -72,25 +73,28 @@ module.exports.loop = function ()
     {
         initialize();
     }
-    if(Memory.creepCount[Room.name]['harvester'] === 0)
-    {
-    	Memory.spawnQueue.push("harvester");
-    	Memory.spawnQueue.push("tractor");
-    }
 	for(var name in Game.creeps) 
     {
 		var creep = Game.creeps[name];
+		//console.log("Game.creeps["+name+"]: "+JSON.stringify(Game.creeps[name],null,4));
 		if(creep.spawning || creep.memory.role === undefined || creep.memory.role === null)
 			{continue;}
 		creep.performRole(CreepRole);
-		if(creep.memory.role === 'tractor')
+		/*if(creep.memory.role === 'tractor')
 		{
 			selfRouteCreep(creep, creep.memory.target);
 		}
 		else
-		{
-			routeCreep(creep, creep.memory.target);
-		}
+		{*/
+			
+			var error = routeCreep(creep, creep.memory.target)
+		    if(error)
+		    {
+		    	console.log("creep move error:"+error);
+		    	console.log("creep with error: "+JSON.stringify(creep,null,4));
+		    }
+
+		//}
 	}
 
 //	for(var i in Game.rooms)
@@ -98,7 +102,6 @@ module.exports.loop = function ()
 //		var room = Game.rooms[i];
 //		console.log("Examining room: "+room);
 //	}
-
 	for(var i in Game.spawns)
 	{
 		var spawn = Game.spawns[i];
@@ -107,9 +110,10 @@ module.exports.loop = function ()
 		{
 			if(Memory.spawnQueue.length > 0)
 			{
-				console.log("    - Spawn has "+spawn.energy+"/"+CreepRole.getRoleCost(Memory.spawnQueue[0])+" needed energy");
-				if(spawn.energy >= CreepRole.getRoleCost(Memory.spawnQueue[0]))
+				console.log("    - Spawn has "+spawn.room.energyAvailable+"/"+CreepRole.getRoleCost(Memory.spawnQueue[0],spawn.room.energyCapacityAvailable)+" needed energy");
+				if(spawn.room.energyAvailable >= CreepRole.getRoleCost(Memory.spawnQueue[0],spawn.room.energyCapacityAvailable))
 				{
+					//console.log("spawn.room.energyAvailable >= CreepRole.getRoleCost(Memory.spawnQueue[0],spawn.room.energyCapacityAvailable)");
 					if(Number.isInteger(spawn.createRole(CreepRole, Memory.spawnQueue[0])))
 					{
 						console.log("Creating creep: failed");
@@ -128,7 +132,8 @@ module.exports.loop = function ()
 		}
 		else
 		{
-			console.log("	- Spawn has "+i.remainingTime+" turns until complete")
+			//console.log("Game.spawns[i]: "+ JSON.stringify(Game.spawns[i],null,4));
+			console.log("	- Spawn has "+Game.spawns[i].spawning.remainingTime+" turns until complete");
 		}
 	}
 }
@@ -141,7 +146,10 @@ function selfRouteCreep(creep,destId)
     {return -1;}
 	else
 	{	var dest = Game.getObjectById(destId);}
-	
+    if(creep.memory.role === "tractor")
+    {
+    	console.log("tractor trying to self move: "+JSON.stringify(creep));
+    }
 	if(typeof creep.memory.pathCache === "undefined" || creep.memory.pathCache === "undefined")
 	{
 		creep.memory.pathCache = creep.pos.findPathTo(dest,{ignoreCreeps:false,maxOps:500,heuristicWeight:2,serialize:true});
@@ -180,7 +188,10 @@ function routeCreep(creep,destId)
     else
     {var dest = Game.getObjectById(destId);}
     var locStr = creep.room.name+"."+creep.pos.x+"."+creep.pos.y
-
+    if(creep.memory.role === "tractor")
+    {
+    	console.log("tractor trying to move: "+JSON.stringify(creep));
+    }
     var path = false;
 
     if(typeof Memory.routeCache !== "object")
@@ -262,3 +273,24 @@ function routeCreep(creep,destId)
     return error;
 }
 
+//http://stackoverflow.com/questions/30147800/extend-source-prototype-to-have-a-memory-object
+Object.defineProperty(Source.prototype, 'memory', {
+    get: function() {
+        if(_.isUndefined(Memory.sources)) {
+            Memory.sources = {};
+        }
+        if(!_.isObject(Memory.sources)) {
+            return undefined;
+        }
+        return Memory.sources[this.id] = Memory.sources[this.id] || {};
+    },
+    set: function(value) {
+        if(_.isUndefined(Memory.sources)) {
+            Memory.sources = {};
+        }
+        if(!_.isObject(Memory.sources)) {
+            throw new Error('Could not set source memory');
+        }
+        Memory.sources[this.id] = value;
+    }
+});

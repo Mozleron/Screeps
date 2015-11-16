@@ -25,13 +25,14 @@ module.exports = function() {
         }
     }
 
-    creep_role.getRoleParts = function(name) {
+    creep_role.getRoleParts = function(name,eCap) {
+    	eCap = (typeof eCap === 'undefined')?eCap:0;
         var r = this.getRole(name)
         if(r == null || r == undefined) {
             return null
         } else {
             try {
-                return r.getParts()
+                return r.getParts(eCap)
             } catch(e) {
                 console.log("Parts method not found.")
                 console.log(e)
@@ -62,13 +63,14 @@ module.exports = function() {
     	}
     }
 
-    creep_role.getRoleCost = function(name) {
+    creep_role.getRoleCost = function(name,eCap) {
         var r = this.getRole(name)
         if(r == null || r == undefined) {
             return null
         } else {
             try {
-                return r.getCost()
+            	//console.log("creep_role.getRoleCost(name="+name+")");
+                return r.getCost(eCap);
             } catch(e) {
                 console.log("Cost method not found.")
                 console.log(e)

@@ -25,10 +25,19 @@
 		    console.log("Parts By Extension: "+this.parts[count])
 		    return this.parts[count]
 	 },
-	 assault.getParts = function()
+	 assault.getParts = function(eCap)
+	 {
+		 for(var i in this.costs)
+		 {
+			 if(eCap >= this.costs[i])
+				 continue;
+			 return this.getPartsForExtensionCount(i);
+		 }
+	 },
+	 /*assault.getParts = function()
 	 {
 		 return this.getPartsForExtensionCount(0);
-	 },
+	 },*/
 	 assault.getMemories = function()
 	 {
 		 return this.memories;
@@ -40,9 +49,20 @@
 	 
 	 assault.getCost = function()
 	 {
-		 return this.getCostForExtensionCount(0);
+		 //return this.getCostForExtensionCount(0);
+		 return this.getCost(300);
 	 },
-	 
+	 assault.getCost = function(eCap)
+	 {
+		 for(var i in this.costs)
+		 {
+			 if(eCap > this.costs[i])
+				 continue;
+			 else
+				 return this.costs[i-1];
+		 }
+		 return this.costs[this.costs.length-1];
+	 }
 	 assault.performRole = function(CreepRole, creep)
 	 {		 
 	     var targets = creep.room.find(FIND_HOSTILE_CREEPS, {filter: function(i){

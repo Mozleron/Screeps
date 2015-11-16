@@ -3,8 +3,9 @@
  * borrowed from https://github.com/Snipey/Screeps/tree/master/dist
  */
 
-Spawn.prototype.createRole = function(CreepRole, role) {
-    var nameCount = null
+Spawn.prototype.createRole = function(CreepRole, role, extMemory) {
+    extMemory = (typeof extMemory === 'undefined')?"":extMemory;
+	var nameCount = null
     var name = null
     while(name == null) {
         nameCount++
@@ -15,18 +16,21 @@ Spawn.prototype.createRole = function(CreepRole, role) {
 
     //if(memory == undefined)
     //    memory = {}
-    console.log("calling getMemory() for role: "+role);
-    var memory = CreepRole.getMemory(role);
+    //console.log("calling getMemory() for role: "+role);
+    var intMemory = CreepRole.getMemory(role);
+    var memory ={}
+    for(var key in intMemory) memory[key]=intMemory[key];
+    for(var key in extMemory) memory[key]=extMemory[key];
     if(memory === null || memory === undefined)
     {
     	console.log("No Memory!");
     }
     else
     {
-    	console.log("Memory: "+role+":"+memory);
+    	console.log(role+" Memory: "+memory);
     }
     
-    var parts = CreepRole.getRoleParts(role)
+    var parts = CreepRole.getRoleParts(role, this.room.energyCapacityAvailable)
     if(parts == null || parts == undefined) {
         console.log("No parts!")
     } else {
@@ -55,14 +59,14 @@ Spawn.prototype.createRole = function(CreepRole, role) {
         break;
     default:
     	console.log("creating creep: "+ out);
-    	if(!Memory.creepCount[Room.name][role])
+    	/*if(!Memory.creepCount[Room.name][role])
     	{
     		Memory.creepCount[Room.name][role] = 1;
     	}
     	else
     	{
     		Memory.creepCount[Room.name][role]++;
-    	}
+    	}*/
     	break;
     }
     return out;

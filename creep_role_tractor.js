@@ -26,11 +26,19 @@
 		 console.log("Parts By Extension: "+this.parts[count]);
 		 return this.parts[count];
 	 },
-	 
-	 tractor.getParts = function()
+	 tractor.getParts = function(eCap)
+	 {
+		for(var i in this.costs)
+		{
+			if(eCap > this.costs[i])
+				continue;
+			return this.getPartsForExtensionCount(i);
+		}
+	 },
+	 /*tractor.getParts = function()
 	 {
 		 return this.getPartsForExtensionCount(0);
-	 },
+	 },*/
 	 tractor.getMemories = function()
 	 {
 		 return this.memories;
@@ -42,7 +50,28 @@
 	 
 	 tractor.getCost = function()
 	 {
-		 return this.getCostForExtensionCount(0);
+		 return this.getCost(300);
+	 },
+	 
+	 tractor.getCost = function(eCap)
+	 {
+		//console.log("harvester.getCost("+eCap+")");
+			//console.log("this.costs: "+JSON.stringify(this.costs));
+			 for(var i in this.costs)
+			 {
+				 //console.log("this.costs[i]: "+this.costs[i]);
+				 if(eCap >= this.costs[i])
+					 continue;
+				 if(i === 0)
+				 {	 //console.log("returning 0");
+					 return 0;}
+				 else
+				 {	 //console.log("returning this.costs[i-1]: "+this.costs[i-1]+"; i="+i);
+					 return this.costs[i-1];}
+			 }
+			 //console.log("made it to the end, returning this.costs[this.costs.length-1]: "+this.costs[this.costs.length-1]);
+			 return this.costs[this.costs.length-1];
+			 //return this.getCostForExtensionCount(0);
 	 },
 	 
 	 tractor.getNearestTruckId = function(creep, list)
@@ -63,7 +92,9 @@
 		if(creep.memory.haulSquad.length === 0)
 		{
 			Memory.spawnQueue.push("truck");
+			creep.memory.trucksRequested++;
 		}
+		
 		
 		switch(creep.memory.task)
 		{
@@ -71,13 +102,20 @@
 		        if(typeof creep.memory.target === "undefined" || creep.memory.target === "undefined" )
 		        {
 	                var sources = creep.room.find(FIND_SOURCES, {
-	                	filter: {squadLeader:'undefined',lair:false}
+	                	filter: function(o)
+	                	{
+	                		//console.log("o: "+JSON.stringify(o,null,4));
+	                		console.log("Memory.sources[creep.room.name][o.id]:"+JSON.stringify(Memory.sources[creep.room.name][o.id]));
+	                		return ((Memory.sources[creep.room.name][o.id].squadLeader === 'undefined') && (Memory.sources[creep.room.name][o.id].lair === false));
+	                	}
 	                });
+	                //console.log("sources: "+JSON.stringify(sources,null,4));
 	                if(sources.length > 0)
 	                {
 	                	var target = creep.pos.findClosestByRange(sources)
-	                	creep.target = target.id;		                
-	                	target.squadLeader = creep.id;
+	                	console.log("target: "+JSON.stringify(target,null,4));
+	                	creep.memory.target = target.id;		                
+	                	Memory.sources[creep.room.name][target.id].squadLeader = creep.id;
 		                creep.memory.action = "move";
 	                }
 	                else
@@ -123,13 +161,14 @@
                             creep.say("ERROR:"+hr);
                         }
 	                }
-	                
+	                console.log("creep.memory.haulSquad.length: "+creep.memory.haulSquad.length);
                 	if(creep.memory.haulSquad.length === 0)
                 	{
                 		if(creep.carry.energy >= creep.carryCapacity)
                 		{
                             creep.memory.action = "move";
                             creep.memory.target = creep.pos.findClosestByRange(creep.room.find(FIND_MY_SPAWNS)).id;
+                            console.log("I have no trucks, and i'm full.  moving off to dump at: "+JSON.stringify(Game.getObjectById(creep.memory.target)));
                 		}
                 	}
                 	else
