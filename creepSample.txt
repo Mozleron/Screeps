@@ -1,0 +1,58 @@
+creep: {
+    "id": "id489140",
+    "room": {
+        "name": "sim",
+        "mode": "simulation",
+        "energyAvailable": 27,
+        "energyCapacityAvailable": 300,
+        "survivalInfo": {
+            "mode": "survival",
+            "status": "active",
+            "user": "5615783951d3e8565cc5d19c",
+            "score": 129,
+            "timeToWave": 71,
+            "wave": 1,
+            "survivalEnabled": true,
+            "invaders": {
+				"bodies": []
+            }
+        }
+    },
+    "pos": {
+        "x": 30,
+        "y": 22,
+        "roomName": "sim"
+    },
+    "name": "tractor1",
+    "body": [
+        {
+            "type": "work",
+            "hits": 100
+        },
+        {
+            "type": "work",
+            "hits": 100
+        },
+        {
+            "type": "carry",
+            "hits": 100
+        },
+        {
+            "type": "move",
+            "hits": 100
+        }
+    ],
+    "my": true,
+    "owner": {
+        "username": "Mozleron"
+    },
+    "spawning": false,
+    "ticksToLive": 1498,
+    "carryCapacity": 50,
+    "carry": {
+        "energy": 0
+    },
+    "fatigue": 0,
+    "hits": 400,
+    "hitsMax": 400
+}
