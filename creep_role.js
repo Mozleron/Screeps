@@ -69,7 +69,6 @@ module.exports = function() {
             return null
         } else {
             try {
-            	//console.log("creep_role.getRoleCost(name="+name+")");
                 return r.getCost(eCap);
             } catch(e) {
                 console.log("Cost method not found.")

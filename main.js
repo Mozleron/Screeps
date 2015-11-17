@@ -69,6 +69,7 @@ function initialize()
 
 module.exports.loop = function () 
 {
+	console.log("****Starting new tick****");
     if(!Memory.init)
     {
         initialize();
@@ -76,25 +77,11 @@ module.exports.loop = function ()
 	for(var name in Game.creeps) 
     {
 		var creep = Game.creeps[name];
-		//console.log("Game.creeps["+name+"]: "+JSON.stringify(Game.creeps[name],null,4));
 		if(creep.spawning || creep.memory.role === undefined || creep.memory.role === null)
 			{continue;}
 		creep.performRole(CreepRole);
-		/*if(creep.memory.role === 'tractor')
-		{
-			selfRouteCreep(creep, creep.memory.target);
-		}
-		else
-		{*/
-			
-			var error = routeCreep(creep, creep.memory.target)
-		    if(error)
-		    {
-		    	console.log("creep move error:"+error);
-		    	console.log("creep with error: "+JSON.stringify(creep,null,4));
-		    }
 
-		//}
+		var error = routeCreep(creep, creep.memory.target)
 	}
 
 //	for(var i in Game.rooms)
@@ -110,6 +97,7 @@ module.exports.loop = function ()
 		{
 			if(Memory.spawnQueue.length > 0)
 			{
+				console.log("spawn Queue length = "+Memory.spawnQueue.length);
 				console.log("    - Spawn has "+spawn.room.energyAvailable+"/"+CreepRole.getRoleCost(Memory.spawnQueue[0],spawn.room.energyCapacityAvailable)+" needed energy");
 				if(spawn.room.energyAvailable >= CreepRole.getRoleCost(Memory.spawnQueue[0],spawn.room.energyCapacityAvailable))
 				{
@@ -136,6 +124,7 @@ module.exports.loop = function ()
 			console.log("	- Spawn has "+Game.spawns[i].spawning.remainingTime+" turns until complete");
 		}
 	}
+	console.log("****Ending tick****");
 }
 
 function selfRouteCreep(creep,destId)
@@ -179,6 +168,69 @@ function selfRouteCreep(creep,destId)
 	creep.memory.lastPos = creep.pos;
 }
 
+function lookAhead(creep,direction,lastPos)
+{
+	var x = 0;
+	var y = 0;
+	console.log("direction: "+direction);
+
+	console.log("Pre x: "+x+",y: "+y);
+	switch(direction)
+	{
+		case '2':
+			console.log("case 2");
+			x++;
+		case '1':
+			console.log("case 1");
+			y--;
+			break;
+		case '4':
+			console.log("case 4");
+			y++;
+		case '3':
+			console.log("case 3");
+			x++;
+			break;
+		case '6':
+			console.log("case 6");
+			x--;
+		case '5':
+			console.log("case 5");
+			y++;
+			break;
+		case '8':
+			console.log("case 8");
+			y--;
+		case '7':
+			console.log("case 7");
+			x--;
+			break;
+		default:
+			console.log("case default");
+			break;
+	}
+	console.log("Post x: "+x+",y: "+y);
+	//var lookpos =creep.room.getPosition(creep.pos.x+x, creep.pos.y+y);
+	var target = creep.room.lookAt(creep.pos.x+x, creep.pos.y+y);
+	console.log(JSON.stringify(target));
+	for(var i in target)
+	{
+		if(target[i].type === 'creep')
+		{
+			for(var j in target[i])
+			{
+				if((target[i][j].id > creep.id) || (creep.pos === creep.memory.lastPos))
+				{
+					console.log(creep.name+" found block, yielding!");
+					creep.say("yielding!");
+					return true;
+				}
+			}
+		}
+	}
+	return false;
+}
+
 function routeCreep(creep,destId) 
 {
     if(creep.fatigue>0)
@@ -188,10 +240,10 @@ function routeCreep(creep,destId)
     else
     {var dest = Game.getObjectById(destId);}
     var locStr = creep.room.name+"."+creep.pos.x+"."+creep.pos.y
-    if(creep.memory.role === "tractor")
+/*    if(creep.memory.role === "tractor")
     {
     	console.log("tractor trying to move: "+JSON.stringify(creep));
-    }
+    }*/
     var path = false;
 
     if(typeof Memory.routeCache !== "object")
@@ -264,11 +316,14 @@ function routeCreep(creep,destId)
         }
     }
 
-    /*if(creep.pos.getRangeTo(dest)>1)
+    if(creep.pos.getRangeTo(dest)>1)
     { //you will need your own "pathisBlocked" function!   && pathisBlocked(creep.pos,dir)
-        dir = Math.floor(Math.random()*8);
-    }*/
-
+        //dir = Math.floor(Math.random()*8);
+    	console.log("creep."+creep.name+" looking ahead");
+    	if(lookAhead(creep,dir))
+    		dir++;
+    }
+    creep.memory.lastPos = creep.pos;
     var error = creep.move(dir);
     return error;
 }

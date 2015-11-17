@@ -10,15 +10,15 @@
  module.exports = function (creep) 
  {
 	 var truck = {
-			 part: [[CARRY,CARRY,CARRY,MOVE,MOVE,MOVE],
-			        [CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE],
-			        [CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE],
-			        [CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE]],
+			 parts: [[CARRY,CARRY,CARRY,MOVE,MOVE,MOVE],
+			         [CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE],
+			         [CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE],
+			         [CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE]],
 			 costs: [300,
 			         600,
 			         900,
 			         1200],
-			 memories:{role:'truck', task:'harvest'}
+			 memories:{role:'truck', task:'harvest', squadLeader:''}
 	 };
 	 
 	 truck.getPartsForExtensionCount = function(count)
@@ -30,7 +30,7 @@
 	 {
 		for(var i in this.costs)
 		{
-			if(eCap >= this.costs[i])
+			if(eCap > this.costs[i])
 				continue;
 			return this.getPartsForExtensionCount(i);
 		}
@@ -53,17 +53,23 @@
 	 },
 	 truck.getCost = function(eCap)
 	 {
-		 for(var i in this.costs)
-		 {
-			 if(eCap > this.costs[i])
-				 continue;
-			 if(i === 0)
-				 return 0;
-			 else
-				 return this.costs[i-1];
-		 }
-		 return this.costs[this.costs.length-1];
-		 //return this.getCostForExtensionCount(0);
+		//console.log("harvester.getCost("+eCap+")");
+			//console.log("this.costs: "+JSON.stringify(this.costs));
+			 for(var i in this.costs)
+			 {
+				 //console.log("this.costs[i]: "+this.costs[i]);
+				 if(eCap >= this.costs[i])
+					 continue;
+				 if(i === 0)
+				 {	 //console.log("returning 0");
+					 return 0;}
+				 else
+				 {	 //console.log("returning this.costs[i-1]: "+this.costs[i-1]+"; i="+i);
+					 return this.costs[i-1];}
+			 }
+			 //console.log("made it to the end, returning this.costs[this.costs.length-1]: "+this.costs[this.costs.length-1]);
+			 return this.costs[this.costs.length-1];
+			 //return this.getCostForExtensionCount(0);
 	 },
 	 
 	 truck.performRole = function(CreepRole, creep)

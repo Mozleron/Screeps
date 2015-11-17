@@ -47,7 +47,6 @@
 	 {
 		 return this.costs[count];
 	 },
-	 
 	 tractor.getCost = function()
 	 {
 		 return this.getCost(300);
@@ -86,15 +85,14 @@
 		 }
 		 return nearest.id;
 	 },
-	 
 	 tractor.performRole = function(CreepRole, creep)
 	 {
-		if(creep.memory.haulSquad.length === 0)
+		if(creep.memory.trucksRequested === 0 || creep.memory.haulSquad.length !== creep.memory.trucksRequested)
 		{
 			Memory.spawnQueue.push("truck");
 			creep.memory.trucksRequested++;
+			
 		}
-		
 		
 		switch(creep.memory.task)
 		{
@@ -142,6 +140,13 @@
 	                    {
 	                        creep.memory.action = "collect";
 	                        creep.memory.pathCache = 'undefined';
+	                        if(creep.memory.haulPathLength === 'undefined' || creep.memory.haulPathLength === 0)
+	                        {
+	                        	creep.memory.haulPathLength = creep.pos.getRangeTo(creep.pos.findClosestByRange(creep.room.find(FIND_MY_SPAWNS)));
+	                        	//TODO: Find the formula to determine how many truck CARRY parts are needed
+	                        	//		Formula parts: WORK parts, CARRY parts on Tractor, total CARRY parts on trucks in Haul Squad, distance between nearest store and source.
+	                        	//creep.memory.haulersNeeded = 
+	                        }
 	                    }
 	                    else
 	                    {

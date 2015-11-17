@@ -21,6 +21,7 @@ Spawn.prototype.createRole = function(CreepRole, role, extMemory) {
     var memory ={}
     for(var key in intMemory) memory[key]=intMemory[key];
     for(var key in extMemory) memory[key]=extMemory[key];
+    memory["lastPos"] = {"x":0,"y":0,roomName:"undefined"};
     if(memory === null || memory === undefined)
     {
     	console.log("No Memory!");
