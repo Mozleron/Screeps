@@ -26,6 +26,7 @@
     <TypeScriptCompile Include="roles\role.ts" />
     <TypeScriptCompile Include="roles\role_tractor.ts" />
     <TypeScriptCompile Include="screeps.d.ts" />
+    <TypeScriptCompile Include="spawner.ts" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>
