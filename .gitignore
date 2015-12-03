@@ -1,18 +1,26 @@
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
 
-#################
-## Eclipse
-#################
+# User-specific files (MonoDevelop/Xamarin Studio)
+*.userprefs
 
-*.pydevproject
-.metadata
-bin/
-tmp/
-*.tmp
-*.bak
-*.swp
-*~.nib
-local.properties
-.settings/
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+build/
+bld/
+[Bb]in/
+[Oo]bj/
+
+# Visual Studio 2015 cache/options directory
+.vs/
 
 #############
 ## Windows detritus
