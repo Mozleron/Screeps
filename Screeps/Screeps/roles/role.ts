@@ -70,12 +70,23 @@ class Role implements IRole {
     unclaimController(target: Structure) { return Creep.unclaimController(target); }
     upgradeController(target: Structure) { return Creep.upgradeController(target); }
     /* IRole methods */
-    getMemory() {
-        return this.memories;
+    static getMemory(name:string) {
+        var r = Role.getRole(name);
+        if (r === null || r === undefined) {
+            return null;
+        }
+        else {
+            return r.getMemories();
+        }
     }
 
-    getRoleParts() {
-        return this.parts[0];
+    static getRoleParts(name, eCap) {
+        eCap = (typeof eCap === undefined) ? eCap : 0;
+        var r = this.getRole(name);
+        if (r === null || r === undefined)
+            return null;
+        else
+            return r.getParts(eCap);
     }
 
     performRole()

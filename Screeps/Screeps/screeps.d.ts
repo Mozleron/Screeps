@@ -685,3 +685,4 @@ declare const enum BodyParts {
 declare var Game: Game;
 declare var Memory: Memory;
 declare var Creep: Creep;
+declare var Spawn: Spawn;
