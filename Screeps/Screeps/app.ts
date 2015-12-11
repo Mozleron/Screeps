@@ -2,8 +2,12 @@
 ///<reference path=".\node.d.ts" />
 ///<reference path=".\roles\role.ts"/>
 class Loop {
+
+    spawnController: SpawnController;
     constructor()
     {
+        if(this.spawnController === null)
+            this.spawnController = new SpawnController();
         this.run();
     }
 
@@ -53,6 +57,8 @@ class Loop {
 
             }
         }
+
+        
     }
 
     private initRoom(room: Room) {

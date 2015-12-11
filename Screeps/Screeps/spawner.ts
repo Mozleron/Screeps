@@ -1,6 +1,6 @@
 ﻿///<reference path=".\screeps.d.ts" />
 interface ISpawner extends Spawn {
-    createRole(): number;
+    createRole(role:string, extMemory?:any): number;
 }
 
 class SpawnController implements ISpawner {
@@ -48,6 +48,36 @@ class SpawnController implements ISpawner {
         }
 
         var parts = Role.getRoleParts(role, this.room.energyCapacityAvailable);
-        return null;
+        if (parts === null || parts === undefined) {
+            console.log("No parts!");
+        } else {
+            console.log("Parts: " + role + ":" + parts);
+        }
+
+        var out = <number>this.createCreep(parts, name, memory);
+        switch (out) {
+            case -1:
+                console.log("Error spawning creep: You don't own this spawn.")
+                break;
+            case -3:
+                console.log("Error spawning creep: A creep already has that name.")
+                break;
+            case -4:
+                console.log("Error spawning creep: This spawn is busy.")
+                break;
+            case -6:
+                console.log("Error spawning creep: This spawn doesn't have enough energy.")
+                break;
+            case -10:
+                console.log("Error spawning creep: Body not properly described, improper arguments.")
+                break;
+            case -14:
+                console.log("Error spawning creep: You don't own this spawn.")
+                break;
+            default:
+                console.log("creating creep: " + out);
+                break;
+        }
+        return out;
     }
 }

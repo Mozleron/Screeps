@@ -5,8 +5,8 @@ interface IRole extends Creep {
     role: string;
     memories: { role: string, task: string};
 
-    getMemory();
-    getRoleParts(): BodyParts[];
+    //getMemory(name: string);
+    //getRoleParts(): BodyParts[];
     //getRoleCost(eCap): number;
 
     performRole(): void;
