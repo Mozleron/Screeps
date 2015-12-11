@@ -90,7 +90,9 @@ class Role implements IRole {
     }
 
     performRole()
-    { }
+    {
+        Role.getRole(this.memory.role).performRole(this);
+    }
 
     static getRole(name:string) {
         if (this[name] == null || this[name] == undefined) {

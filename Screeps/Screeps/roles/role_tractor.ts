@@ -1,5 +1,6 @@
 ﻿///<reference path="..\screeps.d.ts" />
 class tractor extends Role{
+
     memories: { role: string, task: string, trucksRequested: number, haulSquad: [string] };
     constructor() {
         super();        
@@ -13,7 +14,8 @@ class tractor extends Role{
     }
 
     performRole() {
-        
+        //if(this.memory.
     }
 
 }
+

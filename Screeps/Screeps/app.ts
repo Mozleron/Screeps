@@ -32,16 +32,33 @@ class Loop {
         }
         for (var i in Game.spawns) {
             var spawn = Game.spawns[i];
-            if (Memory.spawnQueue.length > 0) {
-                console.log("Spawn Queue length = " + Memory.spawnQueue.length);
-                console.log("   - Spawn has " + spawn.room.energyAvailable + "/"+Role.getRoleCost(Memory.spawnQueue[0].role.name,spawn.room.energyCapacityAvailable)+" needed energy");
-                if (spawn.room.energyAvailable >= Role.getRoleCost(Memory.spawnQueue[0].role.name, spawn.room.energyCapacityAvailable)) {
-                    //if(typeof spawn.createRole
-
+            if (spawn.spawning === null) {
+                if (Memory.spawnQueue.length > 0) {
+                    console.log("Spawn Queue length = " + Memory.spawnQueue.length);
+                    console.log("   - Spawn has " + spawn.room.energyAvailable + "/" + Role.getRoleCost(Memory.spawnQueue[0].role.name, spawn.room.energyCapacityAvailable) + " needed energy");
+                    if (spawn.room.energyAvailable >= Role.getRoleCost(Memory.spawnQueue[0].role.name, spawn.room.energyCapacityAvailable)) {
+                        if (this.isNumeric(this.spawnController.createRole(Memory.spawnQueue[0].role.name, (typeof Memory.spawnQueue[0].role.memories === undefined) ? {} : Memory.spawnQueue[0].role.memories))) {
+                            console.log("Creating creep: Failed");
+                        }
+                        else {
+                            console.log("Creating creep: Success");
+                            Memory.spawnQueue.shift();
+                        }
+                    }
                 }
+                else {
+                    console.log("   - Spawn has " + Spawn.energy + "/" + spawn.energyCapacity + " and nothing in queue");
+                }
+            }
+            else {
+                console.log("   - Spawn has " + Game.spawns[i].spawning.remainingTime + " turns until complete");
             }
         }
         console.log("***Ending Run***");
+    }
+
+    private isNumeric(n) {
+        return !isNaN(parseFloat(n)) && isFinite(n);
     }
 
     private initialize()
@@ -57,8 +74,6 @@ class Loop {
 
             }
         }
-
-        
     }
 
     private initRoom(room: Room) {
