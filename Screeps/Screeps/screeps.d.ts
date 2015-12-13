@@ -678,6 +678,18 @@ declare const enum BodyParts {
     TOUGH,
     HEAL
 }
+declare const enum StructureType {
+    STRUCTURE_SPAWN,
+    STRUCTURE_EXTENSION,
+    STRUCTURE_ROAD,
+    STRUCTURE_WALL,
+    STRUCTURE_RAMPART,
+    STRUCTURE_KEEPER_LAIR,
+    STRUCTURE_PORTAL,
+    STRUCTURE_CONTROLLER,
+    STRUCTURE_LINK,
+    STRUCTURE_STORAGE
+}
 /**
 	* need 8,11,13
 	*/

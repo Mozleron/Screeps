@@ -2,7 +2,9 @@
 interface IRole extends Creep {
     parts: [[BodyParts]];
     costs: [number];
-    role: string;
+    _role: string;
+    _task: string;
+    _action: string;
     memories: { role: string, task: string};
 
     //getMemory(name: string);
@@ -10,6 +12,9 @@ interface IRole extends Creep {
     //getRoleCost(eCap): number;
 
     performRole(): void;
+}
+interface Creep {
+    task: string;
 }
 
 class Role implements IRole {
@@ -31,7 +36,23 @@ class Role implements IRole {
 
     parts: [[BodyParts]];
     costs: [number];
-    role: string;
+    _role: string;
+    get role(): string { return this._role; }
+    set role(theRole: string) {
+        this._role = theRole;
+        Creep.memory.role = this._role;
+    }
+
+    _task: string;
+    get task() { return this._task; }
+    set task(theTask: string) {
+        this._task = theTask;
+    }
+
+    _action: string;
+    get action() { return this._action; }
+    set action(theAction: string) { this._action = theAction; }
+
     memories: { role:string,task:string };
     constructor() {
 
