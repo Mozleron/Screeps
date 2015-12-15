@@ -63,7 +63,7 @@ class tractor extends Role{
                     }
                 }
                 if (this.action === 'move') {
-                    if (this.pos.getRangeTo(Game.getObjectById <{ pos: RoomPosition }>(this.memory.target)) === 1) {
+                    if (this.pos.getRangeTo(Game.getObjectById<{ pos: RoomPosition }>(this.memory.target)) === 1) {
                         if (this.carry.energy < this.carryCapacity) {
                             this.action = "collect";
                             if (typeof this.memory.haulPathLength === 'undefined' || this.memory.haulPathLength === 0) {
@@ -78,8 +78,7 @@ class tractor extends Role{
                         }
                     }
                 }
-                if (this.action === "collect")
-                {
+                if (this.action === "collect") {
                     if (this.carry.energy < this.carryCapacity) {
                         var hr = this.harvest(<Source>Game.getObjectById<{ pos: RoomPosition }>(this.memory.target))
                         {
@@ -96,8 +95,7 @@ class tractor extends Role{
                                 console.log("I have no trucks and i'm full.  Moving off to dump at: " + JSON.stringify(Game.getObjectById(this.memory.target)));
                             }
                         }
-                        else
-                        {
+                        else {
                             var nearCreeps = this.room.lookForAtArea('creep', this.pos.y + 1, this.pos.x + 1, this.pos.y - 1, this.pos.x - 1);
                             if (nearCreeps) {
                                 var nearest: Creep = this.pos.findClosestByRange<Creep>(nearCreeps, {
@@ -105,7 +103,10 @@ class tractor extends Role{
                                 });
                             }
 
+                        }
+
                     }
+                }
                 break;
         }
     }
