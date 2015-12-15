@@ -1,4 +1,15 @@
 ﻿///<reference path="..\screeps.d.ts" />
+interface SourceMemory {
+    squadLeader: string;
+}
+
+interface CreepMemory {
+    trucksRequested: number;
+    haulSquad: [string];
+    target: string;
+    haulPathLength: number;
+}
+
 class tractor extends Role{
 
     memories: { role: string, task: string, trucksRequested: number, haulSquad: [string] };
@@ -11,6 +22,7 @@ class tractor extends Role{
             [300,
             600];
         this.memories = { role: 'tractor', task: 'harvest', trucksRequested: 0, haulSquad: [""] };
+        this.memory.haulPathLength = 0;
     }
 
     performRole() {
@@ -46,20 +58,55 @@ class tractor extends Role{
                             console.log(this.name + " going to update controller id " + controllers[0].id);
                             this.task = "upgrade";
                             this.action = "collect";
+                            this.memory.target = controllers[0].id;
                         }
                     }
                 }
+                if (this.action === 'move') {
+                    if (this.pos.getRangeTo(Game.getObjectById <{ pos: RoomPosition }>(this.memory.target)) === 1) {
+                        if (this.carry.energy < this.carryCapacity) {
+                            this.action = "collect";
+                            if (typeof this.memory.haulPathLength === 'undefined' || this.memory.haulPathLength === 0) {
+                                this.memory.haulPathLength = this.pos.getRangeTo(this.pos.findClosestByRange(this.room.find<{ pos: RoomPosition }>(FindType.FIND_MY_SPAWNS)));
+                                //TODO: Find the formula to determine how many truck CARRY parts are needed
+                                //		Formula parts: WORK parts, CARRY parts on Tractor, total CARRY parts on trucks in Haul Squad, distance between nearest store and source.
+                                //creep.memory.haulersNeeded = 
+                            }
+                        }
+                        else {
+                            this.action = "unload";
+                        }
+                    }
+                }
+                if (this.action === "collect")
+                {
+                    if (this.carry.energy < this.carryCapacity) {
+                        var hr = this.harvest(<Source>Game.getObjectById<{ pos: RoomPosition }>(this.memory.target))
+                        {
+                            if (hr !== 0) {
+                                console.log("Error trying to harvest! " + hr);
+                                this.say("ERROR: " + hr);
+                            }
+                        }
+                        console.log("this.memory.haulSquad.length: " + this.memory.haulSquad.length);
+                        if (this.memory.haulSquad.length === 0) {
+                            if (this.carry.energy >= this.carryCapacity) {
+                                this.action = "move";
+                                this.memory.target = this.pos.findClosestByRange<Spawn>(<Spawn[]>this.room.find(FindType.FIND_MY_SPAWNS)).id;
+                                console.log("I have no trucks and i'm full.  Moving off to dump at: " + JSON.stringify(Game.getObjectById(this.memory.target)));
+                            }
+                        }
+                        else
+                        {
+                            var nearCreeps = this.room.lookForAtArea('creep', this.pos.y + 1, this.pos.x + 1, this.pos.y - 1, this.pos.x - 1);
+                            if (nearCreeps) {
+                                var nearest: Creep = this.pos.findClosestByRange<Creep>(nearCreeps, {
+                                    filter: { role: "truck", squadLeader: this.id }
+                                });
+                            }
+
+                    }
                 break;
         }
     }
-}
-
-interface SourceMemory {
-    squadLeader: string;
-}
-
-interface CreepMemory {
-    trucksRequested: number;
-    haulSquad: [string];
-    target: string;
 }

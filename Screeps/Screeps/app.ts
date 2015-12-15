@@ -71,14 +71,13 @@ class Loop {
                 for (var i in Game.rooms) {
                     this.initRoom(Game.rooms[i]);
                 }
-
             }
         }
     }
 
     private initRoom(room: Room) {
         if (typeof Memory.sources[room.name] === 'undefined') {
-            Memory.sources[room.name] = {};
+            Memory.sources[room.name] = {squadLeader:""};
         }
 
         var sourceList = room.find<Source>(FindType.FIND_SOURCES);
