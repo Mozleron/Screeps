@@ -1,7 +1,7 @@
 ﻿///<reference path="..\screeps.d.ts" />
-interface SourceMemory {
-    squadLeader: string;
-}
+//interface SourceMemory {
+//    squadLeader: string;
+//}
 
 interface CreepMemory {
     trucksRequested: number;
@@ -98,9 +98,9 @@ class tractor extends Role{
                         else {
                             var nearCreeps = this.room.lookForAtArea('creep', this.pos.y + 1, this.pos.x + 1, this.pos.y - 1, this.pos.x - 1);
                             if (nearCreeps) {
-                                var nearest: Creep = this.pos.findClosestByRange<Creep>(nearCreeps, {
-                                    filter: { role: "truck", squadLeader: this.id }
-                                });
+                                //var nearest: Creep = this.pos.findClosestByRange<Creep>(nearCreeps, {
+                                //    filter: { role: "truck", squadLeader: this.id }
+                                //});
                             }
 
                         }

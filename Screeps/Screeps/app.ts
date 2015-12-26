@@ -73,20 +73,34 @@ class Loop {
                 }
             }
         }
+        else {
+            console.log("Game.rooms === undefined, failing initialization");
+            Memory.init = false;
+        }
+
+        if (typeof Memory.spawnQueue === 'undefined') {
+            Memory.spawnQueue = <SpawnQueueMemory>[];
+        }
+
+
     }
 
     private initRoom(room: Room) {
         if (typeof Memory.sources[room.name] === 'undefined') {
-            Memory.sources[room.name] = {squadLeader:""};
+            console.log("sources list empty: initializing");
+            Memory.sources[room.name] = <SourceMemory>[];
         }
 
         var sourceList = room.find<Source>(FindType.FIND_SOURCES);
+        //console.log("sourceList: " + JSON.stringify(sourceList, null, 4));
         for (var i in sourceList) {
+            console.log("sourceList[" + i + "]: ");
             if (typeof Memory.sources[room.name][sourceList[i].id] === 'undefined') {
                 Memory.sources[room.name][sourceList[i].id] = {};
             }
             Memory.sources[room.name][sourceList[i].id].squadLeader = 'undefined';
             Memory.sources[room.name][sourceList[i].id].lair = false;
+            //console.log("Memory.sources[room.name][" + sourceList[i].id + "]: " + JSON.stringify(Memory.sources[room.name][sourceList[i].id], null, 4));
         }
         var keepers = sourceList[i].room.find<Structure>(FindType.FIND_HOSTILE_STRUCTURES);
         for (var i in keepers) {
