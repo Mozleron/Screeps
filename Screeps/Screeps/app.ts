@@ -79,34 +79,42 @@ class Loop {
         }
 
         if (typeof Memory.spawnQueue === 'undefined') {
-            Memory.spawnQueue = <SpawnQueueMemory>[];
+            //Memory.spawnQueue = <SpawnQueueMemory>[];
         }
 
 
     }
 
     private initRoom(room: Room) {
-        if (typeof Memory.sources[room.name] === 'undefined') {
+        /*if (typeof Memory.sources[room.name] === 'undefined') {
             console.log("sources list empty: initializing");
             Memory.sources[room.name] = <SourceMemory>[];
-        }
+        }*/
 
         var sourceList = room.find<Source>(FindType.FIND_SOURCES);
-        //console.log("sourceList: " + JSON.stringify(sourceList, null, 4));
+        console.log("sourceList: " + JSON.stringify(sourceList, null, 4));
         for (var i in sourceList) {
+            if (typeof Memory.sources[room.name] === 'undefined') {
+                Memory.sources[room.name] = { sourceList[i].id:{squadLeader: "undefined", lair: false }}
             console.log("sourceList[" + i + "]: ");
             if (typeof Memory.sources[room.name][sourceList[i].id] === 'undefined') {
+                console.log("Initializing sources[" + room.name + "][" + sourceList[i].id + "]");
                 Memory.sources[room.name][sourceList[i].id] = {};
             }
             Memory.sources[room.name][sourceList[i].id].squadLeader = 'undefined';
-            Memory.sources[room.name][sourceList[i].id].lair = false;
-            //console.log("Memory.sources[room.name][" + sourceList[i].id + "]: " + JSON.stringify(Memory.sources[room.name][sourceList[i].id], null, 4));
+            Memory.sources[room.name][sourceList[i].id].
+            console.log("Memory.sources[room.name][" + sourceList[i].id + "]: " + JSON.stringify(Memory.sources[room.name][sourceList[i].id, null, 4));
         }
         var keepers = sourceList[i].room.find<Structure>(FindType.FIND_HOSTILE_STRUCTURES);
         for (var i in keepers) {
             Memory.sources[room.name][keepers[i].pos.findClosestByRange<Source>(sourceList).id].lair = true;
         }
     }
+}
+
+interface SourceMemory {
+    lair: boolean,
+    squadLeader: string
 }
 
 module.exports.loop = function () {
