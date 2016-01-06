@@ -35,9 +35,9 @@ class Loop {
             if (spawn.spawning === null) {
                 if (Memory.spawnQueue.length > 0) {
                     console.log("Spawn Queue length = " + Memory.spawnQueue.length);
-                    console.log("   - Spawn has " + spawn.room.energyAvailable + "/" + Role.getRoleCost(Memory.spawnQueue[0].role.name, spawn.room.energyCapacityAvailable) + " needed energy");
-                    if (spawn.room.energyAvailable >= Role.getRoleCost(Memory.spawnQueue[0].role.name, spawn.room.energyCapacityAvailable)) {
-                        if (this.isNumeric(this.spawnController.createRole(Memory.spawnQueue[0].role.name, (typeof Memory.spawnQueue[0].role.memories === undefined) ? {} : Memory.spawnQueue[0].role.memories))) {
+                    console.log("   - Spawn has " + spawn.room.energyAvailable + "/" + Role.getRoleCost(Memory.spawnQueue[0].role, spawn.room.energyCapacityAvailable) + " needed energy");
+                    if (spawn.room.energyAvailable >= Role.getRoleCost(Memory.spawnQueue[0].role, spawn.room.energyCapacityAvailable)) {
+                        if (this.isNumeric(this.spawnController.createRole(Memory.spawnQueue[0].role, (typeof Memory.spawnQueue[0].memories === undefined) ? {} : Memory.spawnQueue[0].memories))) {
                             console.log("Creating creep: Failed");
                         }
                         else {
@@ -67,7 +67,8 @@ class Loop {
 
         if (typeof Game.rooms != 'undefined') {
             if (typeof Memory.sources === 'undefined') {
-                Memory.sources = {};
+                Memory.sources = new Array<{ [<string>]: SourceMemory[] }>();
+                Memory.sources[Game.rooms[i].name] = new Array<SourceMemory>();
                 for (var i in Game.rooms) {
                     this.initRoom(Game.rooms[i]);
                 }
@@ -79,23 +80,22 @@ class Loop {
         }
 
         if (typeof Memory.spawnQueue === 'undefined') {
-            //Memory.spawnQueue = <SpawnQueueMemory>[];
+            //var sq: SpawnQueueMemory[] = [];
+            Memory.spawnQueue = new Array<SpawnQueueId>();
         }
-
-
     }
 
     private initRoom(room: Room) {
-        /*if (typeof Memory.sources[room.name] === 'undefined') {
+        if (typeof Memory.sources[room.name] === 'undefined') {
             console.log("sources list empty: initializing");
-            Memory.sources[room.name] = <SourceMemory>[];
-        }*/
+            Memory.sources[room.name] = new Array <SourceMemory>();
+        }
 
         var sourceList = room.find<Source>(FindType.FIND_SOURCES);
         console.log("sourceList: " + JSON.stringify(sourceList, null, 4));
         for (var i in sourceList) {
             if (typeof Memory.sources[room.name] === 'undefined') {
-                Memory.sources[room.name] = { sourceList[i].id:{squadLeader: "undefined", lair: false }}
+                //Memory.sources[room.name][sourceList[i].id]
             console.log("sourceList[" + i + "]: ");
             if (typeof Memory.sources[room.name][sourceList[i].id] === 'undefined') {
                 console.log("Initializing sources[" + room.name + "][" + sourceList[i].id + "]");

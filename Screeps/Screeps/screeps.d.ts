@@ -625,20 +625,26 @@ interface PathStep {
     direction: string;
 }
 interface Memory {
+//helpful site for figuring out interfaces http://json2ts.com/
     creeps: { [name: string]: CreepMemory };
     flags: { [name: string]: FlagMemory };
     rooms: { [name: string]: RoomMemory };
-    spawns: { [name: string]: SpawnMemory };
-    sources: { [name: string]: SourceMemory };
+    //spawns: { [name: string]: SpawnMemory };
+    sources: SourceMemoryId[];
     init: boolean;
-    spawnQueue: [{ role: SpawnQueueMemory } ];
+    spawnQueue: SpawnQueueId[];
 }
 interface CreepMemory {role:string }
 interface FlagMemory { }
-interface RoomMemory {typename:string }
-interface SpawnMemory { }
+interface RoomMemory { typename: string }
+
+interface SourceMemoryCore { squadleader: string, lair: boolean }
+interface SourceMemoryId { id: SourceMemoryCore }
+
 interface SourceMemory {/*id:string*/ }
-interface SpawnQueueMemory {name:string, memories:any }
+
+interface SpawnQueueCore{role:string, memories:any }
+interface SpawnQueueId { id: SpawnQueueCore[] }
 declare const enum FindType {
     FIND_EXIT_TOP = 1,
     FIND_EXIT_RIGHT = 3,
