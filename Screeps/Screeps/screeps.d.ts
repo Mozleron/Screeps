@@ -641,8 +641,8 @@ interface RoomMemory { typename: string }
 interface SourceMemoryCore { squadleader: string, lair: boolean }
 interface SourceMemoryId { id: SourceMemoryCore }
 
-interface SourceMemory {/*id:string*/ }
-
+//interface SourceMemory {/*id:string*/ }
+interface SpawnMemory { }
 interface SpawnQueueCore{role:string, memories:any }
 interface SpawnQueueId { id: SpawnQueueCore[] }
 declare const enum FindType {

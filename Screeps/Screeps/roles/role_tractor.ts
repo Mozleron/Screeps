@@ -27,7 +27,7 @@ class tractor extends Role{
 
     performRole() {
         if (this.memory.trucksRequested === 0 || this.memory.haulSquad.length !== this.memory.trucksRequested) {
-            Memory.spawnQueue.push({ role: { name: "truck", memories: "" } });
+            Memory.spawnQueue[this.room.name].push({ name: "truck", memories: "" } );
             this.memory.trucksRequested++;
         }
 
