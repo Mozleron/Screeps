@@ -102,10 +102,10 @@ class Loop {
             Memory.sources[room.name][sourceList[i].id].squadLeader = 'undefined';
             Memory.sources[room.name][sourceList[i].id].lair = false;
             console.log("Memory.sources[room.name][" + sourceList[i].id + "]: " + JSON.stringify(Memory.sources[room.name][sourceList[i].id], null, 4));
-            var keepers = sourceList[i].room.find<Structure>(FindType.FIND_HOSTILE_STRUCTURES);
-            for (var i in keepers) {
-                Memory.sources[room.name][keepers[i].pos.findClosestByRange<Source>(sourceList).id].lair = true;
-            }
+        }
+        var keepers = sourceList[i].room.find<Structure>(FindType.FIND_HOSTILE_STRUCTURES);
+        for (var i in keepers) {
+            Memory.sources[room.name][keepers[i].pos.findClosestByRange<Source>(sourceList).id].lair = true;
         }
     }
 }
