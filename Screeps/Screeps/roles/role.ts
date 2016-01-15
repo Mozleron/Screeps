@@ -7,9 +7,9 @@ interface IRole extends Creep {
     _action: string;
     memories: { role: string, task: string};
 
-    //getMemory(name: string);
-    //getRoleParts(): BodyParts[];
-    //getRoleCost(eCap): number;
+    getMemory(name: string);
+    getRoleParts(name: string, eCap: number): BodyParts[];
+    getRoleCost(name: string, eCap: number): number;
 
     performRole(): void;
 }
@@ -91,8 +91,9 @@ class Role implements IRole {
     unclaimController(target: Structure) { return Creep.unclaimController(target); }
     upgradeController(target: Structure) { return Creep.upgradeController(target); }
     /* IRole methods */
-    static getMemory(name:string) {
-        var r = Role.getRole(name);
+    getMemory(name: string) {
+        throw "not implemented"
+        var r = this.getRole(name);
         if (r === null || r === undefined) {
             return null;
         }
@@ -101,35 +102,51 @@ class Role implements IRole {
         }
     }
 
-    static getRoleParts(name, eCap) {
-        eCap = (typeof eCap === undefined) ? eCap : 0;
-        var r = this.getRole(name);
-        if (r === null || r === undefined)
-            return null;
-        else
-            return r.getParts(eCap);
+    getRoleParts(name, eCap) {
+        throw "not implemented"
+        //eCap = (typeof eCap === undefined) ? eCap : 0;
+        //var r = this.getRole(name);
+        //if (r === null || r === undefined)
+        //    return null;
+        //else
+        //    return r.getParts(eCap);
+        return new Array<BodyParts>();
     }
 
     performRole()
     {
-        Role.getRole(this.memory.role).performRole(this);
+        throw "not implemented"
+        //this.getRole(this.memory.role).performRole(this);
     }
 
-    static getRole(name:string) {
+
+    getRole(name: string) {
+        throw "not implemented"
         if (this[name] == null || this[name] == undefined) {
             this[name] = require("role_" + name)();
         }
         return this[name];
     }
 
-    static getRoleCost(name:string, eCap:number) {
-        var r=this.getRole(name);
-        if (r == null || r == undefined) {
-            return null;
-        }
-        else {
-            return r.getCost(eCap);
-        }
+    getRoleCost(name:string, eCap:number) {
+        //var r=this.getRole(name);
+        //if (r == null || r == undefined) {
+        //    return null;
+        //}
+        //else {
+        //    return r.getCost(eCap);
+        //}
+        throw "not implemented";
         return 0;
+    }
+}
+
+class InstanceLoader<T>{
+    constructor(private context: Object) {
+    }
+    getInstance(name: string, ...args: any[]): T {
+        var instance = Object.create(this.context[name].prototype);
+        instance.constructor.apply(instance, args);
+        return <T>instance;
     }
 }
